@@ -1,0 +1,29 @@
+{
+  "name": "testblog",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "package.json",
+  "author": "Matthew Derocher <hello@theformer.faith>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "sanity start",
+    "test": "sanity check"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/base": "^0.137.0",
+    "@sanity/components": "^0.137.0",
+    "@sanity/core": "^0.137.0",
+    "@sanity/default-layout": "^0.137.0",
+    "@sanity/default-login": "^0.137.0",
+    "@sanity/desk-tool": "^0.137.1",
+    "prop-types": "^15.6",
+    "react": "^16.8.0",
+    "react-autocomplete": "^1.8.1",
+    "react-dom": "^16.8.0"
+  },
+  "devDependencies": {}
+}
