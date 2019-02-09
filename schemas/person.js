@@ -6,16 +6,27 @@ export default {
   type: 'document',
   fields: [
     {
-      name: 'wikidataLookup',
-      title: 'Lookup Person in Wikidata',
-      type: 'string',
+      name: 'wikidata',
+      type: 'object',
+      fields: [
+        {
+          name: 'wikidataLookup',
+          title: 'Lookup Person in Wikidata',
+          type: 'string'
+        },
+        {
+          name: 'wikidataId',
+          title: 'Wikidata ID',
+          type: 'string'
+        }
+      ],
       inputComponent: WikidataLookup
     },
     {
       name: 'givenNames',
       title: 'Given Names',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [{ type: 'string' }],
       options: {
         layout: 'tags'
       }
@@ -30,10 +41,9 @@ export default {
       title: 'Slug',
       type: 'slug',
       options: {
-        source: (formData) => {
-          let slug = formData.givenNames.toString() + ' ' + formData.familyName;
-          console.log(formData)
-          return slug;
+        source: formData => {
+          let slug = formData.givenNames === undefined ? formData.familyName : formData.givenNames.toString() + ' ' + formData.familyName;
+          return slug
         },
         maxLength: 96
       }
@@ -67,7 +77,7 @@ export default {
         {
           title: 'Block',
           type: 'block',
-          styles: [{title: 'Normal', value: 'normal'}],
+          styles: [{ title: 'Normal', value: 'normal' }],
           lists: []
         }
       ]
