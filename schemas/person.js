@@ -1,4 +1,6 @@
 import WikidataLookup from '../components/WikidataLookup'
+import AutoComplete from '../components/AutoComplete'
+import CustomObjectInput from '../components/CustomObjectInput'
 
 export default {
   name: 'person',
@@ -8,11 +10,14 @@ export default {
     {
       name: 'wikidata',
       type: 'object',
+      collapsible: true,
+      collapsed: true,
       fields: [
         {
           name: 'wikidataLookup',
           title: 'Lookup Person in Wikidata',
-          type: 'string'
+          type: 'string',
+          inputComponent: AutoComplete
         },
         {
           name: 'wikidataId',
@@ -83,6 +88,7 @@ export default {
       ]
     }
   ],
+  inputComponent: CustomObjectInput,
   preview: {
     select: {
       title: 'name',

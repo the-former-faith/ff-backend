@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import FormField from 'part:@sanity/components/formfields/default'
 import PatchEvent, {set, unset} from 'part:@sanity/form-builder/patch-event'
-import Autocomplete from 'react-autocomplete'
-import styles from './index.css'
+import {setIfMissing} from 'part:@sanity/form-builder/patch-event'
+import Fieldset from 'part:@sanity/components/fieldsets/default'
+import {FormBuilderInput} from 'part:@sanity/form-builder'
 
 export default class WikidataLookup extends React.Component {
   static propTypes = {
@@ -18,16 +17,17 @@ export default class WikidataLookup extends React.Component {
       wikidataId: PropTypes.string,
       wikidataLookup: PropTypes.string
     }),
-    onChange: PropTypes.func.isRequired
+    focusPath: PropTypes.array.isRequired,
+    onFocus: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired
   }
 
-  state = {
-    results: []
-  };
+  firstFieldInput = React.createRef()
 
   // this is called by the form builder whenever this input should receive focus
   focus() {
-    this._inputElement.focus()
+    this.firstFieldInput.current.focus()
   }
 
   searchWikidata(event){
@@ -77,16 +77,17 @@ export default class WikidataLookup extends React.Component {
   handleSelect = (title, element) => {
     const {type, value} = this.props
     const id = element.value
-
+    console.log(title)
     const nextValue = {
       _type: type.name,
-      wikidataId: id,
-      wikidataLookup: title
+      wikidataId: id
     }
+    this.setState({
+      input: title
+    })
 
     const patch = title === '' ? unset() : set(nextValue)
     this.props.onChange(PatchEvent.from(patch))
-    console.log(value.id);
   }
 
   handleSourceChange = event => {
@@ -103,54 +104,40 @@ export default class WikidataLookup extends React.Component {
     this.props.onChange(PatchEvent.from(patch))
   }
 
+  handleFieldChange = (field, fieldPatchEvent) => {
+    const {onChange, type} = this.props
+    // Whenever the field input emits a patch event, we need to make sure to each of the included patches
+    // are prefixed with its field name, e.g. going from:
+    // {path: [], set: <nextvalue>} to {path: [<fieldName>], set: <nextValue>}
+    // and ensure this input's value exists
+    onChange(fieldPatchEvent.prefixAll(field.name).prepend(setIfMissing({_type: type.name})))
+  }
+
   render() {
-    const {type, value, onChange} = this.props
-    const {results} = this.state
+    const {type, value, level, focusPath, onFocus, onBlur} = this.props
 
     return (
-      <div>
-        <FormField label={type.title} description={type.description}>
-          <Autocomplete
-            className={styles.customText}
-            getItemValue={(item) => item.label}
-            items={results}
-            menuStyle={{
-              borderRadius: '3px',
-              boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-              background: 'rgba(255, 255, 255, 0.9)',
-              padding: '2px 0',
-              fontSize: '90%',
-              position: 'fixed',
-              overflow: 'auto',
-              maxHeight: '50%',
-              zIndex: 100
-            }}
-            inputProps={{className: styles.customTextInput}}
-            renderItem={(item, isHighlighted) =>
-              <div style={{ background: isHighlighted ? 'lightgray' : 'white' }} data-id={item.value}>
-                {item.image &&
-                  <img width="40" src={item.image} />
-                }
-                <h2>{item.label}</h2>
-                <p>{item.description}</p>
-              </div>
-            }
-            type="text"
-            value={value === undefined ? '' : value.wikidataLookup}
-            onChange={this.handleSourceChange}
-            onSelect={(e, d) => this.handleSelect(e, d)}
-            ref={element => this._inputElement = element}
-          />
-        </FormField>
-        <FormField label="Wikidata ID" description={type.description}>
-          <input
-            type="text"
-            value={value === undefined ? '' : value.wikidataId}
-            onChange={this.handleSourceChange}
-            
-          />
-        </FormField>
-      </div>
+      <Fieldset level={level} legend={type.title} description={type.description}>
+        <div>
+          {type.fields.map((field, i) => (
+            // Delegate to the generic FormBuilderInput. It will resolve and insert the actual input component
+            // for the given field type
+            <FormBuilderInput
+              level={level + 1}
+              ref={i === 0 ? this.firstFieldInput : null}
+              key={field.name}
+              type={field.type}
+              value={value && value[field.name]}
+              onChange={patchEvent => this.handleFieldChange(field, patchEvent)}
+              { ...((field.name === 'wikidataLookup') && { onSelect: this.handleSelect })}
+              path={[field.name]}
+              focusPath={focusPath}
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
+          ))}
+        </div>
+      </Fieldset>
     )
   }
 }
