@@ -73,12 +73,18 @@ export default class WikidataLookup extends React.Component {
   handleSourceChange = event => {
     const {type} = this.props
     const inputValue = event.target.value
-
     this.searchWikidata(inputValue);
+    this.setState({ input: inputValue })
+  }
+
+  handleSelect = (a, b) => {
+    const {onSelect} = this.props
+    onSelect(a, b)
+    this.setState({ input: a})
   }
 
   render() {
-    const {type, onChange, onSelect} = this.props
+    const {type, onChange} = this.props
     const {results, input} = this.state
 
     return (
@@ -111,7 +117,7 @@ export default class WikidataLookup extends React.Component {
           type="text"
           value={input}
           onChange={this.handleSourceChange}
-          onSelect={(e, d) => onSelect(e, d)}
+          onSelect={(e, d) => this.handleSelect(e, d)}
           ref={element => this._inputElement = element}
         />
       </FormField>

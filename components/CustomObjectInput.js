@@ -13,7 +13,7 @@ export default class CustomObjectInput extends React.PureComponent {
     value: PropTypes.shape({
       _type: PropTypes.string
     }),
-    focusPath: PropTypes.array.isRequired,
+    focusPath: PropTypes.array,
     onFocus: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func.isRequired
@@ -22,7 +22,29 @@ export default class CustomObjectInput extends React.PureComponent {
   firstFieldInput = React.createRef()
 
   handleFieldChange = (field, fieldPatchEvent) => {
+    console.log(field)
     const {onChange, type} = this.props
+    if(field.name === "wikidataId") {
+      console.log("hey")
+      const endpointUrl = 'https://query.wikidata.org/sparql'
+      const sparqlQuery = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+      PREFIX wd: <http://www.wikidata.org/entity/> 
+      select  *
+      where {
+        wd:${field.name} rdfs:label ?label .
+        FILTER (langMatches( lang(?label), "EN" ) )
+      }`
+      const fullUrl = endpointUrl + '?query=' + encodeURIComponent( sparqlQuery )
+      const headers = { 'Accept': 'application/sparql-results+json' };
+      fetch( fullUrl, { headers } )
+      .then( body => {
+        if(body.ok) {
+          return body.json() 
+        } else {
+          console.log("error")
+        }
+      }).then(b => console.log(b))
+    }
     // Whenever the field input emits a patch event, we need to make sure to each of the included patches
     // are prefixed with its field name, e.g. going from:
     // {path: [], set: <nextvalue>} to {path: [<fieldName>], set: <nextValue>}

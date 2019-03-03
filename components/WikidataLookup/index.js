@@ -17,8 +17,8 @@ export default class WikidataLookup extends React.Component {
       wikidataId: PropTypes.string,
       wikidataLookup: PropTypes.string
     }),
-    focusPath: PropTypes.array.isRequired,
-    onFocus: PropTypes.func.isRequired,
+    focusPath: PropTypes.array,
+    onFocus: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func.isRequired
   }
@@ -30,54 +30,51 @@ export default class WikidataLookup extends React.Component {
     this.firstFieldInput.current.focus()
   }
 
-  searchWikidata(event){
+  populateFields = (id) => {
+    const {type} = this.props
+
+    //Get info from Wikidata
+    const url = `https://www.wikidata.org/wiki/Special:EntityData/${id}.json`
+    let select = ''
+    let properties = ''
+
+    Object.entries(type.options.wikidataFields).forEach(entry => {
+      let key = entry[0];
+      let value = entry[1];
+      //use key and value here
+      select = select.concat('?', key , ' ?' , key , 'Label ')
+      properties = properties.concat('OPTIONAL { ?item wdt:' , value , ' ?' , key , '. } ')
+    });
+
     const endpointUrl = 'https://query.wikidata.org/sparql'
-    const sparqlQuery = `SELECT ?value ?label ?image ?description WHERE {
-        ?value wdt:P31 wd:Q5.
-        ?value rdfs:label ?label.
-        ?value schema:description ?description.
+    const sparqlQuery = `SELECT ?item ?label ${select} WHERE {
+        BIND(wd:${id} AS ?item)
+        ?item rdfs:label ?label.
+        ${properties}
         FILTER((LANG(?label)) = "en")
-        FILTER((LANG(?description)) = "en")
-        FILTER(CONTAINS(LCASE(STR(?label)), "${event.toLowerCase()}"))
-        OPTIONAL { ?value wdt:P18 ?image. }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
       LIMIT 10`
     const fullUrl = endpointUrl + '?query=' + encodeURIComponent( sparqlQuery )
     const headers = { 'Accept': 'application/sparql-results+json' };
 
-    if(event.length > 2) {
-      fetch( fullUrl, { headers } )
+    fetch( fullUrl, { headers } )
       .then( body => {
         if(body.ok) {
           return body.json() 
         } else {
           console.log("error")
         }
-      }).then(b => {
-        if (b !== undefined) {
-          return b.results.bindings.map(function(c){
-            return {
-              label: c.label.value, 
-              value: c.value.value.slice(31),
-              image: c.image === undefined ? null : c.image.value,
-              description: c.description.value ? c.description.value : null
-            }
-          })
-        } else {
-          return [{label: "No results"}]
-        }
-      })
-      .then(d => {
-        this.setState({ results: d})
-      })
-    } else {
-      this.setState({ results: []})
+      }).then(b => console.log(b))
+
+    const nextValue = {
+      _type: type.name
     }
   }
+
   handleSelect = (title, element) => {
     const {type, value} = this.props
     const id = element.value
-    console.log(title)
     const nextValue = {
       _type: type.name,
       wikidataId: id
@@ -90,22 +87,11 @@ export default class WikidataLookup extends React.Component {
     this.props.onChange(PatchEvent.from(patch))
   }
 
-  handleSourceChange = event => {
-    const {type} = this.props
-    const inputValue = event.target.value
-
-    this.searchWikidata(inputValue);
-    const nextValue = {
-      _type: type.name,
-      wikidataLookup: inputValue
-    }
-
-    const patch = inputValue === '' ? unset() : set(nextValue)
-    this.props.onChange(PatchEvent.from(patch))
-  }
-
   handleFieldChange = (field, fieldPatchEvent) => {
     const {onChange, type} = this.props
+    if(field.name === "wikidataId") {
+      this.populateFields(fieldPatchEvent.patches[0].value)
+    }
     // Whenever the field input emits a patch event, we need to make sure to each of the included patches
     // are prefixed with its field name, e.g. going from:
     // {path: [], set: <nextvalue>} to {path: [<fieldName>], set: <nextValue>}

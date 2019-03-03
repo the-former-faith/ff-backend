@@ -1,6 +1,5 @@
 import WikidataLookup from '../components/WikidataLookup'
 import AutoComplete from '../components/AutoComplete'
-import CustomObjectInput from '../components/CustomObjectInput'
 
 export default {
   name: 'person',
@@ -8,24 +7,15 @@ export default {
   type: 'document',
   fields: [
     {
-      name: 'wikidata',
-      type: 'object',
-      collapsible: true,
-      collapsed: true,
-      fields: [
-        {
-          name: 'wikidataLookup',
-          title: 'Lookup Person in Wikidata',
-          type: 'string',
-          inputComponent: AutoComplete
-        },
-        {
-          name: 'wikidataId',
-          title: 'Wikidata ID',
-          type: 'string'
-        }
-      ],
-      inputComponent: WikidataLookup
+      name: 'wikidataLookup',
+      title: 'Lookup Person in Wikidata',
+      type: 'string',
+      inputComponent: AutoComplete
+    },
+    {
+      name: 'wikidataId',
+      title: 'Wikidata ID',
+      type: 'string'
     },
     {
       name: 'givenNames',
@@ -40,6 +30,11 @@ export default {
       name: 'familyName',
       title: 'Family Name',
       type: 'string'
+    },
+    {
+      name: 'fullName',
+      title: 'Full Name',
+      type: 'string',
     },
     {
       name: 'slug',
@@ -88,10 +83,16 @@ export default {
       ]
     }
   ],
-  inputComponent: CustomObjectInput,
+  inputComponent: WikidataLookup,
+  options: {
+    wikidataFields: {
+      givenNames: 'P735',
+      familyName: 'P734'
+    }
+  },
   preview: {
     select: {
-      title: 'name',
+      title: 'fullName',
       media: 'image'
     }
   }
