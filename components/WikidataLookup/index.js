@@ -10,7 +10,7 @@ export default class WikidataLookup extends React.Component {
     type: PropTypes.shape({
       title: PropTypes.string
     }).isRequired,
-
+    wikidataInstanceOf: PropTypes.string,
     level: PropTypes.number,
     value: PropTypes.shape({
       _type: PropTypes.string,
@@ -30,34 +30,112 @@ export default class WikidataLookup extends React.Component {
     this.firstFieldInput.current.focus()
   }
 
+  mergeObjects(objectArray) {
+    var newObject = {}
+    objectArray.map(function(c){
+      Object.keys(c).forEach(key => {
+        if (newObject[key] === undefined || newObject[key] == c[key]){
+          newObject[key] = c[key]
+        } else if (Array.isArray(newObject[key])) {
+          newObject[key].push(c[key])      
+        } else {
+          newObject[key] = [newObject[key], c[key]]
+        }
+      })
+    })
+    return newObject
+  }
+
+  simplifyWikidataResponse(objectArray) {
+    var newArray = []
+    objectArray.map(function(c){
+      var newObject = {}
+      Object.keys(c).forEach(key => {
+        newObject[key] = c[key].value
+      })
+      newArray.push(newObject)
+    })
+    return newArray
+  }
+
+  removeLabels(objectArray) {
+    var oldKeys = Object.keys(objectArray[0]).filter(word => RegExp('Label').test(word))
+    var newKeys = []
+    oldKeys.forEach(c => {
+      newKeys.push(c.substring(0, c.length - 5))
+    })
+    var newArray = []
+    objectArray.map(function(c){
+      var newObject = {}
+      Object.keys(c).forEach(key => {
+        var rename = newKeys.find(a =>{
+          var b = a + 'Label'
+          return key == b
+        })
+        if(key === rename + 'Label') {
+           newObject[rename] = c[key]
+        } else if (newKeys.find(a =>{return a === key})) {
+           //Igrore this one
+        } else {
+          newObject[key] = c[key]
+        }
+      })
+      newArray.push(newObject)
+    })
+    return newArray
+  }
+
+  prepareFieldData(data) {
+    const {type} = this.props
+    const nextValue = {
+      _type: type.name
+    }
+    Object.keys(data).forEach(key => {
+      let value = data[key];
+      //use key and value here
+      const results = type.fields.find( field => field.name === key );
+      if(typeof results !== 'undefined') {
+        if(results.type.jsonType === 'array'){
+          const fieldArray = [value]
+          nextValue[key] = fieldArray
+        } else {
+          nextValue[key] = value
+        }
+      }
+    });
+
+    this.props.onChange(PatchEvent.from(set(nextValue)))
+  }
+
   populateFields = (id) => {
     const {type} = this.props
-
-    //Get info from Wikidata
+    //Create sparql query
     const url = `https://www.wikidata.org/wiki/Special:EntityData/${id}.json`
     let select = ''
     let properties = ''
 
     Object.entries(type.options.wikidataFields).forEach(entry => {
-      let key = entry[0];
-      let value = entry[1];
-      //use key and value here
+      let key = entry[0]
+      let value = entry[1]
       select = select.concat('?', key , ' ?' , key , 'Label ')
       properties = properties.concat('OPTIONAL { ?item wdt:' , value , ' ?' , key , '. } ')
     });
 
     const endpointUrl = 'https://query.wikidata.org/sparql'
-    const sparqlQuery = `SELECT ?item ?label ${select} WHERE {
+    const sparqlQuery = `SELECT ?item ?label ?instanceOf ${select} WHERE {
         BIND(wd:${id} AS ?item)
         ?item rdfs:label ?label.
+        OPTIONAL { ?item wdt:P31 ?instanceOf. }
         ${properties}
         FILTER((LANG(?label)) = "en")
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
       LIMIT 10`
+    //console.log(sparqlQuery)
     const fullUrl = endpointUrl + '?query=' + encodeURIComponent( sparqlQuery )
     const headers = { 'Accept': 'application/sparql-results+json' };
 
+    //Make sparql query
     fetch( fullUrl, { headers } )
       .then( body => {
         if(body.ok) {
@@ -65,11 +143,26 @@ export default class WikidataLookup extends React.Component {
         } else {
           console.log("error")
         }
-      }).then(b => console.log(b))
-
-    const nextValue = {
-      _type: type.name
-    }
+      })
+      .then(a => {
+        if (a.results.bindings.length !== 0) {
+          return this.simplifyWikidataResponse(a.results.bindings)
+        } else {
+          return Promise.reject(a)
+        }
+      }).then(z => {
+        if (z[0].instanceOf === "http://www.wikidata.org/entity/" + type.options.wikidataInstanceOf) {
+          return z
+        } else {
+          return Promise.reject(z)
+        }
+      }).then(b => {
+        return this.removeLabels(b)
+      }).then(c =>{
+        return this.mergeObjects(c)
+      }).then(d => {
+        this.prepareFieldData(d)
+      })
   }
 
   handleSelect = (title, element) => {
@@ -114,12 +207,12 @@ export default class WikidataLookup extends React.Component {
               key={field.name}
               type={field.type}
               value={value && value[field.name]}
-              onChange={patchEvent => this.handleFieldChange(field, patchEvent)}
-              { ...((field.name === 'wikidataLookup') && { onSelect: this.handleSelect })}
-              path={[field.name]}
               focusPath={focusPath}
               onFocus={onFocus}
               onBlur={onBlur}
+              onChange={patchEvent => this.handleFieldChange(field, patchEvent)}
+              { ...((field.name === 'wikidataLookup') && { onSelect: this.handleSelect })}
+              path={[field.name]} instanceOf={type.options.wikidataInstanceOf}
             />
           ))}
         </div>

@@ -7,10 +7,18 @@ export default {
   type: 'document',
   fields: [
     {
+      name: 'label',
+      title: 'Display Title',
+      type: 'string',
+    },
+    {
       name: 'wikidataLookup',
       title: 'Lookup Person in Wikidata',
       type: 'string',
-      inputComponent: AutoComplete
+      inputComponent: AutoComplete,
+      options: {
+        wikidataInstanceOf: 'Q5'
+      }
     },
     {
       name: 'wikidataId',
@@ -32,17 +40,12 @@ export default {
       type: 'string'
     },
     {
-      name: 'fullName',
-      title: 'Full Name',
-      type: 'string',
-    },
-    {
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
         source: formData => {
-          let slug = formData.givenNames === undefined ? formData.familyName : formData.givenNames.toString() + ' ' + formData.familyName;
+          let slug = formData.label;
           return slug
         },
         maxLength: 96
@@ -88,11 +91,12 @@ export default {
     wikidataFields: {
       givenNames: 'P735',
       familyName: 'P734'
-    }
+    },
+    wikidataInstanceOf: 'Q5'
   },
   preview: {
     select: {
-      title: 'fullName',
+      title: 'label',
       media: 'image'
     }
   }

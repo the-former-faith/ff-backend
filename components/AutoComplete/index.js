@@ -8,9 +8,8 @@ import styles from './index.css'
 export default class WikidataLookup extends React.Component {
   static propTypes = {
     type: PropTypes.shape({
-      title: PropTypes.string
+      title: PropTypes.string,
     }).isRequired,
-    level: PropTypes.number,
     onChange: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
   }
@@ -26,9 +25,10 @@ export default class WikidataLookup extends React.Component {
   }
 
   searchWikidata(event){
+    const {type, instanceOf} = this.props
     const endpointUrl = 'https://query.wikidata.org/sparql'
     const sparqlQuery = `SELECT ?value ?label ?image ?description WHERE {
-        ?value wdt:P31 wd:Q5.
+        ?value wdt:P31 wd:${instanceOf}.
         ?value rdfs:label ?label.
         ?value schema:description ?description.
         FILTER((LANG(?label)) = "en")
