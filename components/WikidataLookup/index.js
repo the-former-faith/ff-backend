@@ -175,9 +175,9 @@ export default class WikidataLookup extends React.Component {
     this.setState({
       input: title
     })
-
     const patch = title === '' ? unset() : set(nextValue)
     this.props.onChange(PatchEvent.from(patch))
+    this.populateFields(id)
   }
 
   handleFieldChange = (field, fieldPatchEvent) => {
