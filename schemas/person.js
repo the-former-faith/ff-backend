@@ -89,8 +89,36 @@ export default {
   inputComponent: WikidataLookup,
   options: {
     wikidataFields: {
-      givenNames: 'P735',
-      familyName: 'P734'
+      givenNames: {
+        id: 'P735'
+      },
+      familyName: {
+        id: 'P734'
+      },
+      dob: {
+        id: 'P569',
+        properties: {
+          earliest: {
+            id: 'P1319',
+            properties: {
+              precision: {
+                id: 'timePrecision'
+              }
+            }
+          },
+          latest: {
+            id: 'P1326',
+            properties: {
+              precision: {
+                id: 'timePrecision'
+              },
+              calendar: {
+                id: 'calendar'
+              }
+            }
+          }
+        }
+      }
     },
     wikidataInstanceOf: 'Q5'
   },

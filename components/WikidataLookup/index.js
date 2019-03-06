@@ -85,6 +85,7 @@ export default class WikidataLookup extends React.Component {
     return newArray
   }
 
+  //Create an object of the new data to be sent to the database
   prepareFieldData(data) {
     const {type} = this.props
     const nextValue = {
@@ -92,41 +93,58 @@ export default class WikidataLookup extends React.Component {
     }
     Object.keys(data).forEach(key => {
       let value = data[key];
-      //use key and value here
       const results = type.fields.find( field => field.name === key );
       if(typeof results !== 'undefined') {
+        //Check to make sure that the value being passed into the database is the correct type.
+        //Right now, this only works for converting strings into arrays, but other functions could be added later.
         if(results.type.jsonType === 'array'){
-          const fieldArray = [value]
-          nextValue[key] = fieldArray
+          if(typeof value === 'string') {
+            const fieldArray = [value]
+            nextValue[key] = fieldArray
+          } else {
+            nextValue[key] = value
+          } 
         } else {
           nextValue[key] = value
         }
       }
     });
-
+    //Save to database
     this.props.onChange(PatchEvent.from(set(nextValue)))
+  }
+
+  createQuery = (data, level, prefixes, variable) => {
+    Object.entries(data).forEach(entry => {
+      let key = entry[0]
+      let value = entry[1]
+
+      console.log(variable + " " + prefixes[level] + ":" + value.id + " ?" + key)
+
+      if(typeof value.properties !== 'undefined') {
+        let childLevel = level + 1
+        let childVariable = '?' + key + 'Props'
+        //Add here: line to declare p option
+        this. createQuery(value.properties, childLevel, prefixes, childVariable)
+      }
+
+    });
   }
 
   populateFields = (id) => {
     const {type} = this.props
     //Create sparql query
-    const url = `https://www.wikidata.org/wiki/Special:EntityData/${id}.json`
+    let prefixes = ['wdt', 'pq', 'wikibase']
     let select = ''
-    let properties = ''
+    let queryOptions = ''
 
-    Object.entries(type.options.wikidataFields).forEach(entry => {
-      let key = entry[0]
-      let value = entry[1]
-      select = select.concat('?', key , ' ?' , key , 'Label ')
-      properties = properties.concat('OPTIONAL { ?item wdt:' , value , ' ?' , key , '. } ')
-    });
+    this.createQuery(type.options.wikidataFields, 0, prefixes, '?item')
 
     const endpointUrl = 'https://query.wikidata.org/sparql'
     const sparqlQuery = `SELECT ?item ?label ?instanceOf ${select} WHERE {
         BIND(wd:${id} AS ?item)
         ?item rdfs:label ?label.
         OPTIONAL { ?item wdt:P31 ?instanceOf. }
-        ${properties}
+        ${queryOptions}
         FILTER((LANG(?label)) = "en")
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
@@ -161,6 +179,7 @@ export default class WikidataLookup extends React.Component {
       }).then(c =>{
         return this.mergeObjects(c)
       }).then(d => {
+        console.log(d)
         this.prepareFieldData(d)
       })
   }
