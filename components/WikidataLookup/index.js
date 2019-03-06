@@ -123,7 +123,7 @@ export default class WikidataLookup extends React.Component {
       if(typeof value.properties !== 'undefined') {
         let childLevel = level + 1
         let childVariable = '?' + key + 'Props'
-        //Add here: line to declare p option
+        console.log(variable + " p:" + value.id + " " + childVariable)
         this. createQuery(value.properties, childLevel, prefixes, childVariable)
       }
 
