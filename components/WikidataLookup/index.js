@@ -113,20 +113,33 @@ export default class WikidataLookup extends React.Component {
     this.props.onChange(PatchEvent.from(set(nextValue)))
   }
 
-  createQuery = (data, level, prefixes, variable) => {
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  createQuery = (data, level, prefixes, variable, parent, query) => {
     Object.entries(data).forEach(entry => {
       let key = entry[0]
       let value = entry[1]
+      let divider = ''
+      if (level > 0) {
+        divider = '_'
+      }
 
-      console.log(variable + " " + prefixes[level] + ":" + value.id + " ?" + key)
+      query.variables = query.variables.concat(`?${parent + divider + key} ?${parent + divider + key}Label `)
+      query.options = query.options.concat(`OPTIONAL { ?${variable} ${prefixes[level]}:${value.id} ?${parent + divider + key}. } `)
 
       if(typeof value.properties !== 'undefined') {
         let childLevel = level + 1
-        let childVariable = '?' + key + 'Props'
-        console.log(variable + " p:" + value.id + " " + childVariable)
-        this. createQuery(value.properties, childLevel, prefixes, childVariable)
+        let childVariable = key + 'Props'
+        let childParent = parent + divider + key
+        let prefix = 'p'
+        if (childLevel > 1) {
+          prefix = 'pqv'
+        }
+        query.options = query.options.concat(`OPTIONAL { ?${variable} ${prefix}:${value.id} ?${childVariable}. } `)
+        this.createQuery(value.properties, childLevel, prefixes, childVariable, childParent, query)
       }
-
     });
   }
 
@@ -134,22 +147,24 @@ export default class WikidataLookup extends React.Component {
     const {type} = this.props
     //Create sparql query
     let prefixes = ['wdt', 'pq', 'wikibase']
-    let select = ''
-    let queryOptions = ''
+    let query = {
+      variables: '',
+      options: ''
+    }
 
-    this.createQuery(type.options.wikidataFields, 0, prefixes, '?item')
+    this.createQuery(type.options.wikidataFields, 0, prefixes, 'item', '', query)
 
     const endpointUrl = 'https://query.wikidata.org/sparql'
-    const sparqlQuery = `SELECT ?item ?label ?instanceOf ${select} WHERE {
+    const sparqlQuery = `SELECT ?item ?label ?instanceOf ${query.variables} WHERE {
         BIND(wd:${id} AS ?item)
         ?item rdfs:label ?label.
         OPTIONAL { ?item wdt:P31 ?instanceOf. }
-        ${queryOptions}
+        ${query.options}
         FILTER((LANG(?label)) = "en")
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
       LIMIT 10`
-    //console.log(sparqlQuery)
+    console.log(sparqlQuery)
     const fullUrl = endpointUrl + '?query=' + encodeURIComponent( sparqlQuery )
     const headers = { 'Accept': 'application/sparql-results+json' };
 

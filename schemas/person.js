@@ -111,9 +111,6 @@ export default {
             properties: {
               precision: {
                 id: 'timePrecision'
-              },
-              calendar: {
-                id: 'calendar'
               }
             }
           }
