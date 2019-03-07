@@ -97,25 +97,36 @@ export default {
       },
       dob: {
         id: 'P569',
-        properties: {
+        value: ['calendarmodel', 'precision', 'time', 'timezone'],
+        qualifiers: {
           earliest: {
             id: 'P1319',
-            properties: {
-              precision: {
-                id: 'timePrecision'
-              }
-            }
+            value: ['calendarmodel', 'precision', 'time', 'timezone']
           },
           latest: {
             id: 'P1326',
-            properties: {
-              precision: {
-                id: 'timePrecision'
-              }
-            }
+            value: ['calendarmodel', 'precision', 'time', 'timezone'],
           }
         }
-      }
+      },
+      dod: {
+        id: 'P570',
+        value: ['calendarmodel', 'precision', 'time', 'timezone'],
+        qualifiers: {
+          earliest: {
+            id: 'P1319',
+            value: ['calendarmodel', 'precision', 'time', 'timezone']
+          },
+          latest: {
+            id: 'P1326',
+            value: ['calendarmodel', 'precision', 'time', 'timezone'],
+          },
+          sourcingCircumstances: {
+            id: 'P1480',
+            value: ['id']
+          }
+        }
+      }  
     },
     wikidataInstanceOf: 'Q5'
   },

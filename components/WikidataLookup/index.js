@@ -143,60 +143,133 @@ export default class WikidataLookup extends React.Component {
     });
   }
 
+  simplifyData(schema, data) {
+    var ids = []
+    var newData = {}
+    var re = new RegExp("^(Q[0-9])")
+    var wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
+    Object.entries(schema).forEach(entry => {
+        let key = entry[0]
+        let value = entry[1]
+        let claims = data.claims
+        let claim = claims[value.id]
+        if(typeof claim !== 'undefined') {
+          claim.forEach(a =>{
+            let datavalue = a.mainsnak.datavalue
+            if(typeof datavalue !== 'undefined') {
+              //Get string values, such as given names
+              if(typeof datavalue.value.id !== 'undefined'){
+                //target = newData
+                //key = key
+                //value = datavalue
+                function mergeData(target, key, value) {
+                  if (typeof target[key] === 'undefined') {
+                    target[key] = {}
+                  } 
+                  
+                  if (typeof target[key].id === 'undefined') {
+                    target[key].id = []
+                  }
+                  target[key].id.push(value)
+                }
+                var result =  datavalue.value.id
+                if(re.test(result)) {
+                   fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${result}&origin=*`, { method: 'GET' } )
+                    .then( body => {
+                      console.log("Fetched")
+                      if(body.ok) {
+                        return body.json() 
+                      } else {
+                        console.log("error")
+                      }
+                    })
+                    .then(a => {
+                      let newResult = a.entities[result].labels.en.value
+                      mergeData(newData, key, newResult)
+                    })
+                }
+              } else {
+              //Get object value, such as date of birth.
+              //This will be separated off as a function that will be called on each qualifier  
+                 value.value.forEach(a => {
+                   var result = datavalue.value[a]
+                   if(wikidataUrl.test(result)) {
+                     var newResult = result.replace('http://www.wikidata.org/entity/','')
+                     result = newResult
+                   }
+                   if(re.test(result)) {
+                     ids.push(result)
+                   }
+                   if (typeof newData[key] === 'undefined') {
+                      newData[key] = {}
+                   }
+                   newData[key][a] = result
+                 })        
+              }
+            }
+            if (typeof value.qualifiers !== 'undefined') {
+              let schemaQualifiers = value.qualifiers
+              
+              //Each qualifier gives an array
+              Object.entries(schemaQualifiers).forEach(qualifier => {
+                let qualifierKey = qualifier[0]
+                let qualifierValue = qualifier[1]
+                if (typeof a.qualifiers !== 'undefined') {
+                  let dataQualifier = a.qualifiers[qualifierValue.id]
+                  if(typeof dataQualifier !== 'undefined') {              
+                    dataQualifier.forEach(a => {
+                      qualifierValue.value.forEach(b => {
+                        var result = a.datavalue.value[b]
+                        if(wikidataUrl.test(result)) {
+                           var newResult = result.replace('http://www.wikidata.org/entity/','')
+                           result = newResult
+                        }
+                        if(re.test(result)) {
+                           ids.push(result)
+                        }
+                        if (typeof newData[key] === 'undefined') {
+                          newData[key] = {}
+                        }
+                        newData[key][b] = result
+                      })
+                    })
+                  }
+                }
+              })
+            }
+          })
+        }
+     })
+     return {
+        url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=' + ids.join('|'),
+        keyedData: newData
+      }
+  }
+
   populateFields = (id) => {
     const {type} = this.props
-    //Create sparql query
-    let prefixes = ['wdt', 'pq', 'wikibase']
-    let query = {
-      variables: '',
-      options: ''
-    }
-
-    this.createQuery(type.options.wikidataFields, 0, prefixes, 'item', '', query)
-
-    const endpointUrl = 'https://query.wikidata.org/sparql'
-    const sparqlQuery = `SELECT ?item ?label ?instanceOf ${query.variables} WHERE {
-        BIND(wd:${id} AS ?item)
-        ?item rdfs:label ?label.
-        OPTIONAL { ?item wdt:P31 ?instanceOf. }
-        ${query.options}
-        FILTER((LANG(?label)) = "en")
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-      }
-      LIMIT 10`
-    console.log(sparqlQuery)
-    const fullUrl = endpointUrl + '?query=' + encodeURIComponent( sparqlQuery )
-    const headers = { 'Accept': 'application/sparql-results+json' };
+    const fullUrl = `https://www.wikidata.org/w/api.php?action=wbgetclaims&entity=${id}&format=json&origin=*`
 
     //Make sparql query
-    fetch( fullUrl, { headers } )
-      .then( body => {
-        if(body.ok) {
-          return body.json() 
-        } else {
-          console.log("error")
-        }
-      })
-      .then(a => {
-        if (a.results.bindings.length !== 0) {
-          return this.simplifyWikidataResponse(a.results.bindings)
-        } else {
-          return Promise.reject(a)
-        }
-      }).then(z => {
-        if (z[0].instanceOf === "http://www.wikidata.org/entity/" + type.options.wikidataInstanceOf) {
-          return z
-        } else {
-          return Promise.reject(z)
-        }
-      }).then(b => {
-        return this.removeLabels(b)
-      }).then(c =>{
-        return this.mergeObjects(c)
-      }).then(d => {
-        console.log(d)
-        this.prepareFieldData(d)
-      })
+    var re = new RegExp("^(Q[0-9])");
+    if(re.test(id)){
+      console.log("good ID")
+      fetch( fullUrl, { method: 'GET' } )
+        .then( body => {
+          console.log("Fetched")
+          if(body.ok) {
+            return body.json() 
+          } else {
+            console.log("error")
+          }
+        })
+        .then(a => {
+          console.log(a)
+          console.log(this.simplifyData(type.options.wikidataFields, a))
+        }) 
+    } else {
+      console.log("Ivalid Wikidata ID")
+    }
   }
 
   handleSelect = (title, element) => {
