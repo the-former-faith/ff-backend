@@ -30,61 +30,6 @@ export default class WikidataLookup extends React.Component {
     this.firstFieldInput.current.focus()
   }
 
-  mergeObjects(objectArray) {
-    var newObject = {}
-    objectArray.map(function(c){
-      Object.keys(c).forEach(key => {
-        if (newObject[key] === undefined || newObject[key] == c[key]){
-          newObject[key] = c[key]
-        } else if (Array.isArray(newObject[key])) {
-          newObject[key].push(c[key])      
-        } else {
-          newObject[key] = [newObject[key], c[key]]
-        }
-      })
-    })
-    return newObject
-  }
-
-  simplifyWikidataResponse(objectArray) {
-    var newArray = []
-    objectArray.map(function(c){
-      var newObject = {}
-      Object.keys(c).forEach(key => {
-        newObject[key] = c[key].value
-      })
-      newArray.push(newObject)
-    })
-    return newArray
-  }
-
-  removeLabels(objectArray) {
-    var oldKeys = Object.keys(objectArray[0]).filter(word => RegExp('Label').test(word))
-    var newKeys = []
-    oldKeys.forEach(c => {
-      newKeys.push(c.substring(0, c.length - 5))
-    })
-    var newArray = []
-    objectArray.map(function(c){
-      var newObject = {}
-      Object.keys(c).forEach(key => {
-        var rename = newKeys.find(a =>{
-          var b = a + 'Label'
-          return key == b
-        })
-        if(key === rename + 'Label') {
-           newObject[rename] = c[key]
-        } else if (newKeys.find(a =>{return a === key})) {
-           //Igrore this one
-        } else {
-          newObject[key] = c[key]
-        }
-      })
-      newArray.push(newObject)
-    })
-    return newArray
-  }
-
   //Create an object of the new data to be sent to the database
   prepareFieldData(data) {
     const {type} = this.props
@@ -113,137 +58,87 @@ export default class WikidataLookup extends React.Component {
     this.props.onChange(PatchEvent.from(set(nextValue)))
   }
 
-  capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  addLabel(target, targetKey, key, value) {
+    if (typeof target[key] === 'undefined') {
+      target[key] = {}
+    }   
+    if (typeof target[key][targetKey] === 'string') {
+      let newArray = target[key][targetKey]
+      target[key][targetKey] = [newArray]
+      target[key][targetKey].push(value)
+    } else if (Array.isArray(target[key][targetKey])) {
+      target[key][targetKey].push(value)
+    } else {
+      target[key][targetKey] = value
+    }
   }
 
-  createQuery = (data, level, prefixes, variable, parent, query) => {
-    Object.entries(data).forEach(entry => {
+  checkLabel(target, targetKey, key, value) {
+    const re = new RegExp("^(Q[0-9])")
+    const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
+    if(wikidataUrl.test(value)) {
+      let newValue = value.replace('http://www.wikidata.org/entity/','')
+      value = newValue
+    }
+    if(re.test(value)) {
+       fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+        .then( body => {
+          if(body.ok) {
+            return body.json() 
+          } else {
+            console.log("error")
+          }
+        })
+        .then(a => {
+          let newValue = a.entities[value].labels.en.value
+          this.addLabel(target, targetKey, key, newValue)
+        })
+    } else {
+      this.addLabel(target, targetKey, key, value)
+    }
+  }
+
+  parseData(target, schema, data, parentKey){
+    Object.entries(schema).forEach(entry => {
       let key = entry[0]
       let value = entry[1]
-      let divider = ''
-      if (level > 0) {
-        divider = '_'
+      let claim = data[value.id]
+      if (typeof claim !== 'undefined') {
+        claim.forEach(a =>{
+          //The data structure for qualifiers is slightly different than claims,
+          //So this creates datavalue appropriately
+          let datavalue
+          if (typeof a.mainsnak !== 'undefined') {
+            datavalue = a.mainsnak.datavalue
+          } else if (typeof a.datavalue !== 'undefined') {
+            datavalue = a.datavalue
+          }
+          if(typeof datavalue !== 'undefined') {
+            value.value.forEach(b => {
+              var result = datavalue.value[b]
+              if(typeof parentKey !== 'undefined') {
+                if (typeof target[parentKey] === 'undefined') {
+                  target[parentKey] = {}
+                } 
+                this.checkLabel(target[parentKey], b, key, result)
+              } else {
+                this.checkLabel(target, b, key, result)
+              }
+            })        
+          }
+          if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
+            this.parseData(target, value.qualifiers, a.qualifiers, key)
+          }
+        })
       }
-
-      query.variables = query.variables.concat(`?${parent + divider + key} ?${parent + divider + key}Label `)
-      query.options = query.options.concat(`OPTIONAL { ?${variable} ${prefixes[level]}:${value.id} ?${parent + divider + key}. } `)
-
-      if(typeof value.properties !== 'undefined') {
-        let childLevel = level + 1
-        let childVariable = key + 'Props'
-        let childParent = parent + divider + key
-        let prefix = 'p'
-        if (childLevel > 1) {
-          prefix = 'pqv'
-        }
-        query.options = query.options.concat(`OPTIONAL { ?${variable} ${prefix}:${value.id} ?${childVariable}. } `)
-        this.createQuery(value.properties, childLevel, prefixes, childVariable, childParent, query)
-      }
-    });
+    })
   }
 
   simplifyData(schema, data) {
-    var ids = []
     var newData = {}
-    var re = new RegExp("^(Q[0-9])")
-    var wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
-    Object.entries(schema).forEach(entry => {
-        let key = entry[0]
-        let value = entry[1]
-        let claims = data.claims
-        let claim = claims[value.id]
-        if(typeof claim !== 'undefined') {
-          claim.forEach(a =>{
-            let datavalue = a.mainsnak.datavalue
-            if(typeof datavalue !== 'undefined') {
-              //Get string values, such as given names
-              if(typeof datavalue.value.id !== 'undefined'){
-                //target = newData
-                //key = key
-                //value = datavalue
-                function mergeData(target, key, value) {
-                  if (typeof target[key] === 'undefined') {
-                    target[key] = {}
-                  } 
-                  
-                  if (typeof target[key].id === 'undefined') {
-                    target[key].id = []
-                  }
-                  target[key].id.push(value)
-                }
-                var result =  datavalue.value.id
-                if(re.test(result)) {
-                   fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${result}&origin=*`, { method: 'GET' } )
-                    .then( body => {
-                      console.log("Fetched")
-                      if(body.ok) {
-                        return body.json() 
-                      } else {
-                        console.log("error")
-                      }
-                    })
-                    .then(a => {
-                      let newResult = a.entities[result].labels.en.value
-                      mergeData(newData, key, newResult)
-                    })
-                }
-              } else {
-              //Get object value, such as date of birth.
-              //This will be separated off as a function that will be called on each qualifier  
-                 value.value.forEach(a => {
-                   var result = datavalue.value[a]
-                   if(wikidataUrl.test(result)) {
-                     var newResult = result.replace('http://www.wikidata.org/entity/','')
-                     result = newResult
-                   }
-                   if(re.test(result)) {
-                     ids.push(result)
-                   }
-                   if (typeof newData[key] === 'undefined') {
-                      newData[key] = {}
-                   }
-                   newData[key][a] = result
-                 })        
-              }
-            }
-            if (typeof value.qualifiers !== 'undefined') {
-              let schemaQualifiers = value.qualifiers
-              
-              //Each qualifier gives an array
-              Object.entries(schemaQualifiers).forEach(qualifier => {
-                let qualifierKey = qualifier[0]
-                let qualifierValue = qualifier[1]
-                if (typeof a.qualifiers !== 'undefined') {
-                  let dataQualifier = a.qualifiers[qualifierValue.id]
-                  if(typeof dataQualifier !== 'undefined') {              
-                    dataQualifier.forEach(a => {
-                      qualifierValue.value.forEach(b => {
-                        var result = a.datavalue.value[b]
-                        if(wikidataUrl.test(result)) {
-                           var newResult = result.replace('http://www.wikidata.org/entity/','')
-                           result = newResult
-                        }
-                        if(re.test(result)) {
-                           ids.push(result)
-                        }
-                        if (typeof newData[key] === 'undefined') {
-                          newData[key] = {}
-                        }
-                        newData[key][b] = result
-                      })
-                    })
-                  }
-                }
-              })
-            }
-          })
-        }
-     })
-     return {
-        url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=' + ids.join('|'),
-        keyedData: newData
-      }
+    let claims = data.claims
+    this.parseData(newData, schema, claims)
+    return newData
   }
 
   populateFields = (id) => {
@@ -253,10 +148,8 @@ export default class WikidataLookup extends React.Component {
     //Make sparql query
     var re = new RegExp("^(Q[0-9])");
     if(re.test(id)){
-      console.log("good ID")
       fetch( fullUrl, { method: 'GET' } )
         .then( body => {
-          console.log("Fetched")
           if(body.ok) {
             return body.json() 
           } else {
@@ -264,7 +157,6 @@ export default class WikidataLookup extends React.Component {
           }
         })
         .then(a => {
-          console.log(a)
           console.log(this.simplifyData(type.options.wikidataFields, a))
         }) 
     } else {

@@ -90,10 +90,12 @@ export default {
   options: {
     wikidataFields: {
       givenNames: {
-        id: 'P735'
+        id: 'P735',
+        value: ['id']
       },
       familyName: {
-        id: 'P734'
+        id: 'P734',
+        value: ['id']
       },
       dob: {
         id: 'P569',
