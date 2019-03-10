@@ -36,8 +36,9 @@ export default class WikidataLookup extends React.Component {
     const nextValue = {
       _type: type.name
     }
-    Object.keys(data).forEach(key => {
-      let value = data[key];
+    Object.entries(data).forEach(entry => {
+      let key = entry[0]
+      let value = entry[1]
       const results = type.fields.find( field => field.name === key );
       if(typeof results !== 'undefined') {
         //Check to make sure that the value being passed into the database is the correct type.
@@ -54,8 +55,9 @@ export default class WikidataLookup extends React.Component {
         }
       }
     });
+    console.log(nextValue)
     //Save to database
-    this.props.onChange(PatchEvent.from(set(nextValue)))
+    //this.props.onChange(PatchEvent.from(set(nextValue)))
   }
 
   addLabel(target, targetKey, key, value) {
@@ -71,9 +73,11 @@ export default class WikidataLookup extends React.Component {
     } else {
       target[key][targetKey] = value
     }
+    console.log('addLabel Results', target)
+    return target
   }
 
-  checkLabel(target, targetKey, key, value) {
+  async checkLabel(target, targetKey, key, value) {
     const re = new RegExp("^(Q[0-9])")
     const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
     if(wikidataUrl.test(value)) {
@@ -81,7 +85,7 @@ export default class WikidataLookup extends React.Component {
       value = newValue
     }
     if(re.test(value)) {
-       fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+      await fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
         .then( body => {
           if(body.ok) {
             return body.json() 
@@ -91,54 +95,57 @@ export default class WikidataLookup extends React.Component {
         })
         .then(a => {
           let newValue = a.entities[value].labels.en.value
-          this.addLabel(target, targetKey, key, newValue)
+          let results = this.addLabel(target, targetKey, key, newValue)
+          return results
         })
     } else {
-      this.addLabel(target, targetKey, key, value)
+      return await this.addLabel(target, targetKey, key, value)
     }
   }
 
-  parseData(target, schema, data, parentKey){
-    Object.entries(schema).forEach(entry => {
-      let key = entry[0]
-      let value = entry[1]
-      let claim = data[value.id]
-      if (typeof claim !== 'undefined') {
-        claim.forEach(a =>{
-          //The data structure for qualifiers is slightly different than claims,
-          //So this creates datavalue appropriately
-          let datavalue
-          if (typeof a.mainsnak !== 'undefined') {
-            datavalue = a.mainsnak.datavalue
-          } else if (typeof a.datavalue !== 'undefined') {
-            datavalue = a.datavalue
-          }
-          if(typeof datavalue !== 'undefined') {
-            value.value.forEach(b => {
-              var result = datavalue.value[b]
-              if(typeof parentKey !== 'undefined') {
-                if (typeof target[parentKey] === 'undefined') {
-                  target[parentKey] = {}
-                } 
-                this.checkLabel(target[parentKey], b, key, result)
-              } else {
-                this.checkLabel(target, b, key, result)
-              }
-            })        
-          }
-          if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
-            this.parseData(target, value.qualifiers, a.qualifiers, key)
-          }
-        })
+  async itterateClaims(target, claim, key, value) {
+    let storedClaims = {bug: 'hello'}
+    for await (const a of claim) {
+      //The data structure for qualifiers is slightly different than claims,
+      //So this creates datavalue appropriately
+      let datavalue
+      if (typeof a.mainsnak !== 'undefined') {
+        datavalue = a.mainsnak.datavalue
+      } else if (typeof a.datavalue !== 'undefined') {
+        datavalue = a.datavalue
       }
-    })
+      if(typeof datavalue !== 'undefined') {
+        value.value.forEach(b => {
+          var result = datavalue.value[b]
+          if(typeof parentKey !== 'undefined') {
+            if (typeof target[parentKey] === 'undefined') {
+              target[parentKey] = {}
+            }
+            storedClaims = this.checkLabel(target[parentKey], b, key, result)
+          } else {
+            storedClaims = this.checkLabel(target, b, key, result)
+          }
+        })        
+      }
+      if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
+        storedClaims = this.parseData(target, value.qualifiers, a.qualifiers, key)
+      }
+    }
+    console.log('itterateClaims Rusults', storedClaims)
+    return storedClaims
   }
 
-  simplifyData(schema, data) {
-    var newData = {}
-    let claims = data.claims
-    this.parseData(newData, schema, claims)
-    return newData
+  parseData(target, schema, data, parentKey) {
+    let myResults
+    for (const key in schema) {
+      let value = schema[key];
+      let claim = data[value.id]
+      if (typeof claim !== 'undefined') {
+        myResults = this.itterateClaims(target, claim, key, value)
+      }
+    }
+    console.log('ParseData Results', myResults)
+    return myResults
   }
 
   populateFields = (id) => {
@@ -157,8 +164,15 @@ export default class WikidataLookup extends React.Component {
           }
         })
         .then(a => {
-          console.log(this.simplifyData(type.options.wikidataFields, a))
-        }) 
+          var newData = {}
+          let bob = this.parseData(newData, type.options.wikidataFields, a.claims)
+          console.log('bob', bob)
+          return bob
+        }).then(b => {
+          let dog = b
+          console.log("To b or not to b?", dog)
+          //this.prepareFieldData(b)
+        })
     } else {
       console.log("Ivalid Wikidata ID")
     }
