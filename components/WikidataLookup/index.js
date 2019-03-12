@@ -63,11 +63,10 @@ export default class WikidataLookup extends React.Component {
     } else {
       target[key][targetKey] = value
     }
-    //console.log('target', target)
     return
   }
 
-  async checkLabel(target, targetKey, key, value) {
+  checkLabel(value) {
     const re = new RegExp("^(Q[0-9])")
     const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
     if(wikidataUrl.test(value)) {
@@ -75,7 +74,7 @@ export default class WikidataLookup extends React.Component {
       value = newValue
     }
     if(re.test(value)) {
-      value = await fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+      value = fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
         .then( body => {
           if(body.ok) {
             return body.json() 
@@ -84,12 +83,11 @@ export default class WikidataLookup extends React.Component {
           }
         })
         .then(a => {
-          console.log('Got label!')
-          return "Label!"
-          //return a.entities[value].labels.en.value
+          let label = a.entities[value].labels.en.value
+          return label
         })
     }
-    return this.addLabel(target, targetKey, key, value)
+    return value
   }
 
   parseData(target, schema, data, parentKey){
@@ -114,9 +112,11 @@ export default class WikidataLookup extends React.Component {
                 if (typeof target[parentKey] === 'undefined') {
                   target[parentKey] = {}
                 }
-                return this.checkLabel(target[parentKey], b, key, result)
+                //return this.addLabel(target[parentKey], b, key, value)
+                return this.addLabel(target[parentKey], b, key, result)
               } else {
-                return this.checkLabel(target, b, key, result)
+                //return this.addLabel(target, b, key, value)
+                return this.addLabel(target, b, key, result)
               }
             })        
           }
@@ -128,15 +128,50 @@ export default class WikidataLookup extends React.Component {
     })
   }
 
+  //Create an object of the new data to be sent to the database
+  async prepareFieldData(data) {
+    const {type} = this.props
+    const nextValue = {
+      _type: type.name
+    }
+    Object.keys(data).forEach(key => {
+      let value = data[key];
+      const results = type.fields.find( field => field.name === key );
+      if(typeof results !== 'undefined') {
+        //Check to make sure that the value being passed into the database is the correct type.
+        if(results.type.jsonType === 'array'){
+          if(typeof value === 'string') {
+            const fieldArray = [value]
+            nextValue[key] = fieldArray
+          } else if(typeof value === 'object' && value !== null) {
+            let newValue = Object.values(value)
+            let flattened = newValue.flat(Infinity)
+            nextValue[key] = flattened
+          } else {
+            nextValue[key] = value
+          } 
+        } else if (results.type.jsonType === 'string') {
+          if(typeof value === 'object' && value !== null) {
+            let newValue = Object.values(value)
+            let flattened = newValue.flat(Infinity)
+            nextValue[key] = flattened.toString()
+          }
+        } else {
+          nextValue[key] = value
+        }
+      }
+    })
+    console.log(nextValue)
+    //Save to database
+    //this.props.onChange(PatchEvent.from(set(nextValue)))
+  }
+
   async populateFields(id){
     const {type} = this.props
     let newData = {}
     let claims = await this.fetchClaims(id)
     let parsedClaims = await this.parseData(newData, type.options.wikidataFields, claims.claims)
-    console.log("Results")
-
-    console.log(newData)
-    console.log(JSON.stringify(newData));
+    this.prepareFieldData(newData)
   }
 
   handleSelect = (title, element) => {
