@@ -30,34 +30,24 @@ export default class WikidataLookup extends React.Component {
     this.firstFieldInput.current.focus()
   }
 
-  //Create an object of the new data to be sent to the database
-  prepareFieldData(data) {
-    const {type} = this.props
-    const nextValue = {
-      _type: type.name
-    }
-    Object.entries(data).forEach(entry => {
-      let key = entry[0]
-      let value = entry[1]
-      const results = type.fields.find( field => field.name === key );
-      if(typeof results !== 'undefined') {
-        //Check to make sure that the value being passed into the database is the correct type.
-        //Right now, this only works for converting strings into arrays, but other functions could be added later.
-        if(results.type.jsonType === 'array'){
-          if(typeof value === 'string') {
-            const fieldArray = [value]
-            nextValue[key] = fieldArray
+  fetchClaims(id) {
+    //Make sparql query
+    const fullUrl = `https://www.wikidata.org/w/api.php?action=wbgetclaims&entity=${id}&format=json&origin=*`
+    var re = new RegExp("^(Q[0-9])");
+    if(re.test(id)){
+      const claims = fetch( fullUrl, { method: 'GET' } )
+        .then( body => {
+          if(body.ok) {
+            return body.json() 
           } else {
-            nextValue[key] = value
-          } 
-        } else {
-          nextValue[key] = value
-        }
-      }
-    });
-    console.log(nextValue)
-    //Save to database
-    //this.props.onChange(PatchEvent.from(set(nextValue)))
+            console.log("error")
+          }
+        })
+      return claims
+    } else {
+      return
+      console.log("Ivalid Wikidata ID")
+    }
   }
 
   addLabel(target, targetKey, key, value) {
@@ -73,8 +63,8 @@ export default class WikidataLookup extends React.Component {
     } else {
       target[key][targetKey] = value
     }
-    console.log('addLabel Results', target)
-    return target
+    //console.log('target', target)
+    return
   }
 
   async checkLabel(target, targetKey, key, value) {
@@ -85,7 +75,7 @@ export default class WikidataLookup extends React.Component {
       value = newValue
     }
     if(re.test(value)) {
-      await fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+      value = await fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
         .then( body => {
           if(body.ok) {
             return body.json() 
@@ -94,88 +84,59 @@ export default class WikidataLookup extends React.Component {
           }
         })
         .then(a => {
-          let newValue = a.entities[value].labels.en.value
-          let results = this.addLabel(target, targetKey, key, newValue)
-          return results
+          console.log('Got label!')
+          return "Label!"
+          //return a.entities[value].labels.en.value
         })
-    } else {
-      return await this.addLabel(target, targetKey, key, value)
     }
+    return this.addLabel(target, targetKey, key, value)
   }
 
-  async itterateClaims(target, claim, key, value) {
-    let storedClaims = {bug: 'hello'}
-    for await (const a of claim) {
-      //The data structure for qualifiers is slightly different than claims,
-      //So this creates datavalue appropriately
-      let datavalue
-      if (typeof a.mainsnak !== 'undefined') {
-        datavalue = a.mainsnak.datavalue
-      } else if (typeof a.datavalue !== 'undefined') {
-        datavalue = a.datavalue
-      }
-      if(typeof datavalue !== 'undefined') {
-        value.value.forEach(b => {
-          var result = datavalue.value[b]
-          if(typeof parentKey !== 'undefined') {
-            if (typeof target[parentKey] === 'undefined') {
-              target[parentKey] = {}
-            }
-            storedClaims = this.checkLabel(target[parentKey], b, key, result)
-          } else {
-            storedClaims = this.checkLabel(target, b, key, result)
-          }
-        })        
-      }
-      if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
-        storedClaims = this.parseData(target, value.qualifiers, a.qualifiers, key)
-      }
-    }
-    console.log('itterateClaims Rusults', storedClaims)
-    return storedClaims
-  }
-
-  parseData(target, schema, data, parentKey) {
-    let myResults
-    for (const key in schema) {
-      let value = schema[key];
+  parseData(target, schema, data, parentKey){
+    Object.entries(schema).forEach(entry => {
+      let key = entry[0]
+      let value = entry[1]
       let claim = data[value.id]
       if (typeof claim !== 'undefined') {
-        myResults = this.itterateClaims(target, claim, key, value)
-      }
-    }
-    console.log('ParseData Results', myResults)
-    return myResults
-  }
-
-  populateFields = (id) => {
-    const {type} = this.props
-    const fullUrl = `https://www.wikidata.org/w/api.php?action=wbgetclaims&entity=${id}&format=json&origin=*`
-
-    //Make sparql query
-    var re = new RegExp("^(Q[0-9])");
-    if(re.test(id)){
-      fetch( fullUrl, { method: 'GET' } )
-        .then( body => {
-          if(body.ok) {
-            return body.json() 
-          } else {
-            console.log("error")
+        claim.forEach(a =>{
+          //The data structure for qualifiers is slightly different than claims,
+          //So this creates datavalue appropriately
+          let datavalue
+          if (typeof a.mainsnak !== 'undefined') {
+            datavalue = a.mainsnak.datavalue
+          } else if (typeof a.datavalue !== 'undefined') {
+            datavalue = a.datavalue
+          }
+          if(typeof datavalue !== 'undefined') {
+            value.value.forEach(b => {
+              var result = datavalue.value[b]
+              if(typeof parentKey !== 'undefined') {
+                if (typeof target[parentKey] === 'undefined') {
+                  target[parentKey] = {}
+                }
+                return this.checkLabel(target[parentKey], b, key, result)
+              } else {
+                return this.checkLabel(target, b, key, result)
+              }
+            })        
+          }
+          if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
+            this.parseData(target, value.qualifiers, a.qualifiers, key)
           }
         })
-        .then(a => {
-          var newData = {}
-          let bob = this.parseData(newData, type.options.wikidataFields, a.claims)
-          console.log('bob', bob)
-          return bob
-        }).then(b => {
-          let dog = b
-          console.log("To b or not to b?", dog)
-          //this.prepareFieldData(b)
-        })
-    } else {
-      console.log("Ivalid Wikidata ID")
-    }
+      }
+    })
+  }
+
+  async populateFields(id){
+    const {type} = this.props
+    let newData = {}
+    let claims = await this.fetchClaims(id)
+    let parsedClaims = await this.parseData(newData, type.options.wikidataFields, claims.claims)
+    console.log("Results")
+
+    console.log(newData)
+    console.log(JSON.stringify(newData));
   }
 
   handleSelect = (title, element) => {
