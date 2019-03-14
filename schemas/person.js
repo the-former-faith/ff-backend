@@ -89,46 +89,15 @@ export default {
   inputComponent: WikidataLookup,
   options: {
     wikidataFields: {
-      givenNames: {
-        id: 'P735',
-        value: ['id']
-      },
-      familyName: {
-        id: 'P734',
-        value: ['id']
-      },
-      dob: {
-        id: 'P569',
-        value: ['calendarmodel', 'precision', 'time', 'timezone'],
-        qualifiers: {
-          earliest: {
-            id: 'P1319',
-            value: ['calendarmodel', 'precision', 'time', 'timezone']
-          },
-          latest: {
-            id: 'P1326',
-            value: ['calendarmodel', 'precision', 'time', 'timezone'],
-          }
-        }
-      },
-      dod: {
-        id: 'P570',
-        value: ['calendarmodel', 'precision', 'time', 'timezone'],
-        qualifiers: {
-          earliest: {
-            id: 'P1319',
-            value: ['calendarmodel', 'precision', 'time', 'timezone']
-          },
-          latest: {
-            id: 'P1326',
-            value: ['calendarmodel', 'precision', 'time', 'timezone'],
-          },
-          sourcingCircumstances: {
-            id: 'P1480',
-            value: ['id']
-          }
-        }
-      }  
+      givenNames: 'P735',
+      familyName: 'P734',
+      dob: 'P569',
+      dod: 'P570'
+    },
+    qualifierLabels: {
+      earliest: 'P1319',
+      latest: 'P1326',
+      sourcingCircumstances: 'P1480'
     },
     wikidataInstanceOf: 'Q5'
   },

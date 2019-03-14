@@ -4,6 +4,32 @@ import PatchEvent, {set, unset} from 'part:@sanity/form-builder/patch-event'
 import {setIfMissing} from 'part:@sanity/form-builder/patch-event'
 import Fieldset from 'part:@sanity/components/fieldsets/default'
 import {FormBuilderInput} from 'part:@sanity/form-builder'
+import isPlainObject from 'is-plain-object'
+
+var checkLabel = function(value) {
+  const re = new RegExp("^(Q[0-9])")
+  const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
+  if(wikidataUrl.test(value)) {
+    let newValue = value.replace('http://www.wikidata.org/entity/','')
+    value = newValue
+  }
+  if(re.test(value)) {
+    value = fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+      .then( body => {
+        if(body.ok) {
+          return body.json() 
+        } else {
+          console.log("error")
+        }
+      })
+      .then(a => {
+        //console.log(a)
+        let label = "Label!"//a.entities[value].labels.en.value
+        return label
+      })
+  }
+  return value
+}
 
 export default class WikidataLookup extends React.Component {
   static propTypes = {
@@ -50,86 +76,8 @@ export default class WikidataLookup extends React.Component {
     }
   }
 
-  addLabel(target, targetKey, key, value) {
-    if (typeof target[key] === 'undefined') {
-      target[key] = {}
-    }   
-    if (typeof target[key][targetKey] === 'string') {
-      let newArray = target[key][targetKey]
-      target[key][targetKey] = [newArray]
-      target[key][targetKey].push(value)
-    } else if (Array.isArray(target[key][targetKey])) {
-      target[key][targetKey].push(value)
-    } else {
-      target[key][targetKey] = value
-    }
-    return
-  }
-
-  checkLabel(value) {
-    const re = new RegExp("^(Q[0-9])")
-    const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
-    if(wikidataUrl.test(value)) {
-      let newValue = value.replace('http://www.wikidata.org/entity/','')
-      value = newValue
-    }
-    if(re.test(value)) {
-      value = fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
-        .then( body => {
-          if(body.ok) {
-            return body.json() 
-          } else {
-            console.log("error")
-          }
-        })
-        .then(a => {
-          let label = a.entities[value].labels.en.value
-          return label
-        })
-    }
-    return value
-  }
-
-  parseData(target, schema, data, parentKey){
-    Object.entries(schema).forEach(entry => {
-      let key = entry[0]
-      let value = entry[1]
-      let claim = data[value.id]
-      if (typeof claim !== 'undefined') {
-        claim.forEach(a =>{
-          //The data structure for qualifiers is slightly different than claims,
-          //So this creates datavalue appropriately
-          let datavalue
-          if (typeof a.mainsnak !== 'undefined') {
-            datavalue = a.mainsnak.datavalue
-          } else if (typeof a.datavalue !== 'undefined') {
-            datavalue = a.datavalue
-          }
-          if(typeof datavalue !== 'undefined') {
-            value.value.forEach(b => {
-              var result = datavalue.value[b]
-              if(typeof parentKey !== 'undefined') {
-                if (typeof target[parentKey] === 'undefined') {
-                  target[parentKey] = {}
-                }
-                //return this.addLabel(target[parentKey], b, key, value)
-                return this.addLabel(target[parentKey], b, key, result)
-              } else {
-                //return this.addLabel(target, b, key, value)
-                return this.addLabel(target, b, key, result)
-              }
-            })        
-          }
-          if (typeof value.qualifiers !== 'undefined' && typeof a.qualifiers !== 'undefined') {
-            this.parseData(target, value.qualifiers, a.qualifiers, key)
-          }
-        })
-      }
-    })
-  }
-
   //Create an object of the new data to be sent to the database
-  async prepareFieldData(data) {
+  prepareFieldData(data) {
     const {type} = this.props
     const nextValue = {
       _type: type.name
@@ -160,18 +108,116 @@ export default class WikidataLookup extends React.Component {
           nextValue[key] = value
         }
       }
+      return
     })
-    console.log(nextValue)
+    //console.log(nextValue)
     //Save to database
     //this.props.onChange(PatchEvent.from(set(nextValue)))
   }
 
+  //I got this from https://medium.com/javascript-inside/safely-accessing-deeply-nested-values-in-javascript-99bf72a0855a
+  getValue = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o)
+
+  getValuesArray = (arr, valuePath) => {
+    let value = []
+    arr.map(i => {
+      value.push(this.getValue(valuePath, i))
+    })
+    return value
+  }
+
+  combineValuesArray = (values) => {
+    let results = null
+    values.map(i => {
+      //If it is the first item, make it the results object
+      if (results === null) {
+        results = i
+      } else {
+        Object.keys(i).forEach(key => {
+          if(results[key] !== i[key] && typeof results[key] !== undefined) {
+            if (Array.isArray(results[key])) {
+              results[key].push(i[key])
+            } else {
+              results[key] = [results[key], i[key]]
+            }
+          } else {
+            results[key] = i[key]
+          }
+        })
+      }
+    })
+    return results
+  } 
+
+  simplifyClaims(claims, valuePath) {
+    let data = {}
+    const results = claims.map(x => {
+      let value
+      if (x[1].length > 1) { 
+        let valuesArray = this.getValuesArray(x[1], valuePath)
+        value = this.combineValuesArray(valuesArray)
+      } else {
+        value = this.getValue(valuePath, x[1][0])
+      }
+      let qualifiers = this.getValue(['qualifiers'], x[1][0])
+      let simplifiedQualifiers = (qualifiers) => {
+        let results
+        if(qualifiers !== null){
+          const qualifiersArray = Object.entries(qualifiers)
+          results = this.simplifyClaims(qualifiersArray, ['datavalue', 'value'])
+        }
+        return results
+      }
+      let myQualifiers = simplifiedQualifiers(qualifiers)
+      data[x[0]] = {...value, ...myQualifiers}
+    })
+    return data
+  }
+
+  filterClaims(schema, claims) {
+    const claimsArray = Object.entries(claims.claims)
+    const schemaIds = Object.values(schema)    
+    function filter(arr, query) {
+      return arr.filter(function(el) {
+        if (query.includes(el[0])) {
+          return true;
+        }
+      })
+    }
+    return filter(claimsArray, schemaIds)
+  }
+
+  getLabels(data, path) {
+    const wikidataId = new RegExp("^(Q[0-9])")
+    const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
+    console.log(path)
+    Object.keys(data).map(key => {
+      let value = data[key]
+      if (isPlainObject(value) === true) {
+        path.push(key)
+        this.getLabels(value, path)
+      } else {
+        if (wikidataUrl.test(value)) {
+          let newValue = value.replace('http://www.wikidata.org/entity/','')
+          value = newValue
+        }
+        if (wikidataId.test(value)) {
+          //Do promise-type stuff here
+        }
+      }
+    })
+  }
+
   async populateFields(id){
     const {type} = this.props
-    let newData = {}
-    let claims = await this.fetchClaims(id)
-    let parsedClaims = await this.parseData(newData, type.options.wikidataFields, claims.claims)
-    this.prepareFieldData(newData)
+    let fetchedClaims = await this.fetchClaims(id)
+    let filteredClaims = await this.filterClaims(type.options.wikidataFields, fetchedClaims)
+    let simplifiedClaims = this.simplifyClaims(filteredClaims, ['mainsnak', 'datavalue', 'value'])
+    this.getLabels(simplifiedClaims, [])
+    //console.log("myData", myData)
+    //Add function to get labels from wikidata
+    //Add function to get labels from schema
+    //this.prepareFieldData(newData)
   }
 
   handleSelect = (title, element) => {
