@@ -187,35 +187,60 @@ export default class WikidataLookup extends React.Component {
     return filter(claimsArray, schemaIds)
   }
 
-  getLabels(data, path) {
+  getLabels(data, path, results) {
+    //If results is undefined, create a new array
+    results = results ? results : []
     const wikidataId = new RegExp("^(Q[0-9])")
     const wikidataUrl = new RegExp('^http://www.wikidata.org/entity/')
-    console.log(path)
     Object.keys(data).map(key => {
       let value = data[key]
       if (isPlainObject(value) === true) {
-        path.push(key)
-        this.getLabels(value, path)
+
+        this.getLabels(value, path ? path + '.'  + key : key, results)
       } else {
         if (wikidataUrl.test(value)) {
           let newValue = value.replace('http://www.wikidata.org/entity/','')
           value = newValue
         }
         if (wikidataId.test(value)) {
-          //Do promise-type stuff here
+          let label = fetch( `https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&languages=en&format=json&ids=${value}&origin=*`, { method: 'GET' } )
+            .then( body => {
+              if(body.ok) {
+                return body.json() 
+              } else {
+                console.log("error")
+              }
+            })
+            .then(a => {
+              console.log('Got label!')
+              //return "Label!"
+              return a.entities[value].labels.en.value
+            })
+          results.push([label, path ? path + '.'  + key : key])
         }
       }
     })
+    return results
   }
 
   async populateFields(id){
     const {type} = this.props
     let fetchedClaims = await this.fetchClaims(id)
     let filteredClaims = await this.filterClaims(type.options.wikidataFields, fetchedClaims)
-    let simplifiedClaims = this.simplifyClaims(filteredClaims, ['mainsnak', 'datavalue', 'value'])
-    this.getLabels(simplifiedClaims, [])
-    //console.log("myData", myData)
-    //Add function to get labels from wikidata
+    let simplifiedClaims = await this.simplifyClaims(filteredClaims, ['mainsnak', 'datavalue', 'value'])
+    let gottenLabels = await this.getLabels(simplifiedClaims)
+    console.log(gottenLabels)
+    //It's working, but I need to get it fixed so that it will work for a value that is an array,
+    //such as the given names
+    Promise.all(gottenLabels.map(a => {
+      return a[0]
+    }))
+      .then(values => { 
+        console.log(values);
+      })
+      .catch(error => { 
+        console.log(error.message)
+      });
     //Add function to get labels from schema
     //this.prepareFieldData(newData)
   }
