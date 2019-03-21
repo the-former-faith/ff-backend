@@ -80,5 +80,11 @@ export default {
       sourcingCircumstances: 'P1480'
     },
     wikidataInstanceOf: 'Q5'
+  },
+  preview: {
+    select: {
+      title: 'label.title',
+      media: 'image'
+    }
   }
 }
