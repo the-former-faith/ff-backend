@@ -1,5 +1,4 @@
-import WikidataLookup from '../components/WikidataLookup'
-import AutoComplete from '../components/AutoComplete'
+import CustomObjectInput from '../components/CustomObjectInput'
 
 
 export default {
@@ -12,15 +11,7 @@ export default {
       title: 'Display Title',
       type: 'localeString',
     },
-    {
-      name: 'wikidataLookup',
-      title: 'Lookup Person in Wikidata',
-      type: 'string',
-      inputComponent: AutoComplete,
-      options: {
-        wikidataInstanceOf: 'Q5'
-      }
-    },
+
     {
       name: 'wikidataId',
       title: 'Wikidata ID',
@@ -39,18 +30,6 @@ export default {
       name: 'familyName',
       title: 'Family Name',
       type: 'string'
-    },
-    {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {
-        source: formData => {
-          let slug = formData.label;
-          return slug
-        },
-        maxLength: 96
-      }
     },
     {
       name: 'image',
@@ -87,7 +66,7 @@ export default {
       ]
     }
   ],
-  inputComponent: WikidataLookup,
+  inputComponent: CustomObjectInput,
   options: {
     wikidataFields: {
       givenNames: 'P735',
@@ -101,11 +80,5 @@ export default {
       sourcingCircumstances: 'P1480'
     },
     wikidataInstanceOf: 'Q5'
-  },
-  preview: {
-    select: {
-      title: 'label',
-      media: 'image'
-    }
   }
 }
