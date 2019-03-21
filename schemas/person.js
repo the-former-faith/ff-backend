@@ -1,6 +1,7 @@
 import WikidataLookup from '../components/WikidataLookup'
 import AutoComplete from '../components/AutoComplete'
 
+
 export default {
   name: 'person',
   title: 'Person',
@@ -9,7 +10,7 @@ export default {
     {
       name: 'label',
       title: 'Display Title',
-      type: 'string',
+      type: 'localeString',
     },
     {
       name: 'wikidataLookup',
