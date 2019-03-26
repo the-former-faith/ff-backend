@@ -9,82 +9,22 @@ export default {
     {
       name: 'label',
       title: 'Display Title',
-      type: 'localeString',
-    },
-
-    {
-      name: 'wikidataId',
-      title: 'Wikidata ID',
-      type: 'string'
-    },
-    {
-      name: 'givenNames',
-      title: 'Given Names',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        layout: 'tags'
-      }
-    },
-    {
-      name: 'familyName',
-      title: 'Family Name',
-      type: 'string'
+      type: 'string',
     },
     {
       name: 'image',
       title: 'Image',
-      type: 'image',
-      options: {
-        hotspot: true
-      }
+      type: 'imageObject',
     },
     {
       name: 'dateOfBirth',
       title: 'Date of Birth',
-      type: 'date',
-      options: {
-        dateFormat: 'YYYY'
-      }
+      type: 'dateObject',
     },
-    {
-      name: 'birthYear',
-      title: 'Birth Year',
-      type: 'number'
-    },
-    {
-      name: 'bio',
-      title: 'Bio',
-      type: 'array',
-      of: [
-        {
-          title: 'Block',
-          type: 'block',
-          styles: [{ title: 'Normal', value: 'normal' }],
-          lists: []
-        }
-      ]
-    }
   ],
-  inputComponent: CustomObjectInput,
-  options: {
-    wikidataFields: {
-      givenNames: 'P735',
-      familyName: 'P734',
-      dob: 'P569',
-      dod: 'P570'
-    },
-    qualifierLabels: {
-      earliest: 'P1319',
-      latest: 'P1326',
-      sourcingCircumstances: 'P1480'
-    },
-    wikidataInstanceOf: 'Q5'
-  },
   preview: {
     select: {
-      title: 'label.title',
-      media: 'image'
+      title: 'label'
     }
   }
 }

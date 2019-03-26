@@ -3,6 +3,7 @@ import React from 'react'
 import Fieldset from 'part:@sanity/components/fieldsets/default'
 import {setIfMissing} from 'part:@sanity/form-builder/patch-event'
 import {FormBuilderInput} from 'part:@sanity/form-builder'
+import filterFieldFn$ from 'part:@sanity/desk-tool/filter-fields-fn?'
 
 export default class CustomObjectInput extends React.PureComponent {
   static propTypes = {
@@ -20,6 +21,10 @@ export default class CustomObjectInput extends React.PureComponent {
     onBlur: PropTypes.func.isRequired
   }
 
+  state = {
+    filterField: () => true
+  }
+
   firstFieldInput = React.createRef()
 
   handleFieldChange = (field, fieldPatchEvent) => {
@@ -35,8 +40,22 @@ export default class CustomObjectInput extends React.PureComponent {
     this.firstFieldInput.current.focus()
   }
 
+  componentDidMount(props) {
+    if (filterFieldFn$ !== null) {
+      this.filterFieldFnSubscription = filterFieldFn$.subscribe(filterField =>
+        this.setState({filterField})
+      )
+    }
+  }
+  componentWillUnmount(props) {
+    if (this.filterFieldFnSubscription) {
+      this.filterFieldFnSubscription.unsubscribe()
+    }
+  }
+
   render() {
     const {type, value, level, focusPath, onFocus, onBlur} = this.props
+    const {filterField} = this.state
     return (
       <Fieldset level={level} legend={type.title} description={type.description}>
         This is my custom object input with fields
@@ -55,6 +74,7 @@ export default class CustomObjectInput extends React.PureComponent {
               focusPath={focusPath}
               onFocus={onFocus}
               onBlur={onBlur}
+              filterField={filterField}
             />
           ))}
         </div>
