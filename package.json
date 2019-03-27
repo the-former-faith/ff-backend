@@ -1,5 +1,5 @@
 {
-  "name": "testblog",
+  "name": "the-former-faith-admin-panel",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -8,7 +8,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "sanity start",
-    "test": "sanity check"
+    "test": "sanity check",
+    "now-build": "sanity build"
   },
   "keywords": [
     "sanity"
@@ -31,5 +32,7 @@
     "react-autocomplete": "^1.8.1",
     "react-dom": "^16.8.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@sanity/cli": "^0.140.0"
+  }
 }
