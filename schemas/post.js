@@ -1,17 +1,20 @@
+import File from 'react-icons/lib/fa/file'
+
 export default {
   name: 'post',
   title: 'Post',
+  icon: File,
   type: 'document',
   fields: [
     {
       name: 'title',
       title: 'Title',
-      type: 'string'
+      type: 'localeString'
     },
     {
       name: 'slug',
       title: 'Slug',
-      type: 'slug',
+      type: 'localeSlug',
       options: {
         source: 'title',
         maxLength: 96
@@ -24,12 +27,15 @@ export default {
       to: {type: 'person'}
     },
     {
+      name: 'editors',
+      title: 'Editors',
+      type: 'array',
+      of: [{type: 'reference', to: {type: 'person'}}]
+    },
+    {
       name: 'mainImage',
       title: 'Main image',
-      type: 'image',
-      options: {
-        hotspot: true
-      }
+      type: 'localeImage'
     },
     {
       name: 'categories',
@@ -41,6 +47,17 @@ export default {
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime'
+    },
+    {
+      name: 'longDescription',
+      title: 'Long Description',
+      type: 'localeSimpleBlockContent'
+    },
+    {
+      name: 'shortDescription',
+      title: 'Short Description',
+      type: 'localeBlurb',
+      description: 'This will be shown in list views and shared on social media. 140 characters max length.'
     },
     {
       name: 'body',
@@ -55,9 +72,9 @@ export default {
 
   preview: {
     select: {
-      title: 'title',
+      title: 'title.en',
       author: 'author.name',
-      media: 'mainImage'
+      media: 'mainImage.en'
     },
     prepare(selection) {
       const {author} = selection

@@ -26,10 +26,12 @@ export default {
           {title: 'Decade', value: 8},
           {title: 'Year', value: 9},
           {title: 'Month', value: 10},
-          {title: 'Day', value: 11}
+          {title: 'Day', value: 11},
+          {title: 'Hour', value: 12},
+          {title: 'Minute', value: 13}
         ]
       },
-      validation: Rule => Rule.min(0).max(11)
+      validation: Rule => Rule.min(6).max(13)
     },
     {
       name: 'calendar',

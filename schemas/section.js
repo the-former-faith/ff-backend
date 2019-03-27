@@ -1,79 +1,74 @@
-import Paperclip from 'react-icons/lib/fa/paperclip'
-import User from 'react-icons/lib/fa/user'
+import Indent from 'react-icons/lib/fa/paragraph'
 
 export default {
   name: 'section',
   title: 'Section',
+  icon: Indent,
   type: 'document',
   fields: [
     {
       name: 'heading',
       title: 'Heading',
-      type: 'string'
+      type: 'localeString'
+    },
+    {
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: {type: 'person'}
+    },
+    {
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime'
     },
     {
       name: 'body',
       title: 'Body',
+      type: 'localeAdvancedBlockContent'
+    },
+    {
+      name: 'subSections',
+      title: 'Sub Sections',
       type: 'array',
-      of: [
+      of: [{
+        type: 'reference',
+        to: [{type: 'section'}]
+      }]
+    },
+    {
+      name: 'appearance',
+      title: 'Appearance',
+      description: 'These are fields that themes will use in different ways.',
+      type: 'object',
+      options: {
+        collapsible: true, 
+        collapsed: true
+      },
+      fields: [
         {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'Quote', value: 'blockquote' },
-          ],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'link',
-                fields: [
-                  {
-                    name: 'url',
-                    type: 'url'
-                  }
-                ]
-              },
-              {
-                name: 'internalLink',
-                type: 'object',
-                title: 'Internal link',
-                blockEditor: {
-                  icon: Paperclip
-                },
-                fields: [
-                  {
-                    name: 'reference',
-                    type: 'reference',
-                    to: [
-                      { type: 'post' }
-                      // other types you may want to link to
-                    ]
-                  }
-                ]
-              },
-              {
-                name: 'personLink',
-                type: 'object',
-                title: 'Person link',
-                blockEditor: {
-                  icon: User
-                },
-                fields: [
-                  {
-                    name: 'reference',
-                    type: 'reference',
-                    to: [
-                      { type: 'person' }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        }
+          name: 'sectionImage',
+          title: 'Section Image',
+          type: 'localeImage'
+        },
+        {
+          name: 'sectionColor',
+          title: 'Section Color',
+          type: 'color'
+        },
+        {
+          name: 'sectionAttachment',
+          title: 'Section Attachment',
+          type: 'file'
+        },
       ]
     }
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'heading.en',
+      author: 'author.name',
+      media: 'sectionImage.en'
+    }
+  }
 }

@@ -10,7 +10,7 @@
  */
 export default {
   title: 'Block Content',
-  name: 'blockContent',
+  name: 'simpleBlockContent',
   type: 'array',
   of: [
     {
@@ -21,8 +21,7 @@ export default {
       // you want and decide how you want to deal with it where you want to
       // use your content.
       styles: [
-        {title: 'Normal', value: 'normal'},
-        {title: 'Quote', value: 'blockquote'}
+        {title: 'Normal', value: 'normal'}
       ],
       lists: [{title: 'Bullet', value: 'bullet'}],
       // Marks let you mark up inline text in the block editor.
@@ -50,9 +49,9 @@ export default {
     // You can add additional types here. Note that you can't use
     // primitive types such as 'string' and 'number' in the same array
     // as a block type.
-    {
-      type: 'image',
-      options: {hotspot: true}
-    }
+    //{
+      //type: 'image',
+      //options: {hotspot: true}
+    //}
   ]
 }

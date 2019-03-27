@@ -15,11 +15,13 @@
   ],
   "dependencies": {
     "@sanity/base": "^0.140.11",
+    "@sanity/color-input": "^0.140.3",
     "@sanity/components": "^0.140.11",
     "@sanity/core": "^0.140.11",
     "@sanity/default-layout": "^0.140.11",
     "@sanity/default-login": "^0.140.3",
     "@sanity/desk-tool": "^0.140.11",
+    "@sanity/google-maps-input": "^0.140.11",
     "@sanity/language-filter": "^0.140.0",
     "deepmerge": "^3.2.0",
     "is-plain-object": "^2.0.4",
