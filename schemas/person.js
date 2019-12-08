@@ -7,12 +7,6 @@ export default {
   type: 'document',
   fields: [
     {
-      name: 'title',
-      title: 'Display Title',
-      type: 'string',
-      hidden: true
-    },
-    {
       name: 'givenNames',
       title: 'Given Names',
       type: 'localeStringArray',

@@ -7,15 +7,10 @@ import Quote from 'react-icons/lib/fa/quote-left'
 import MapMarker from 'react-icons/lib/fa/map-marker'
 import Calendar from 'react-icons/lib/fa/calendar'
 
-
 export default {
-  type: 'object',
   name: 'advancedBlockContent',
-  fields: [
-    {
-      name: 'body',
-      title: 'Body',
-      type: 'array',
+  title: 'Content',
+  type: 'array',      
       of: [
         {
           type: 'block',
@@ -176,6 +171,5 @@ export default {
           type: 'blockQuoteObject'
         }
       ]
-    }
-  ]
+  
 }

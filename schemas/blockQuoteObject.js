@@ -4,20 +4,32 @@ export default {
   type: 'object',
   fields: [
     {
-      name: 'quoteText',
+      name: 'text',
       type: 'simpleBlockContent',
-      title: 'Quote Text',
+      title: 'Text',
     },
     {
-      name: 'quoteAuthor',
-      title: 'Quote Author',
-      type: 'reference',
-      to: [{type: 'person'}]
-    },
-    {
-      name: 'quoteSource',
-      type: 'url',
-      title: 'Quote Source URL'
+      name: 'source',
+      type: 'object',
+      fields: [
+        {
+          name: 'author',
+          title: 'Author',
+          type: 'reference',
+          to: [{type: 'person'}]
+        },
+        {
+          name: 'title',
+          type: 'string',
+          title: 'Quote Source Title'
+        },
+        {
+          name: 'url',
+          type: 'url',
+          title: 'Quote Source URL'
+        }
+      ]
+      
     },
   ]
 }

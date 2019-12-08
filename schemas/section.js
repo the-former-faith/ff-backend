@@ -23,12 +23,12 @@ export default {
       type: 'datetime'
     },
     {
-      name: 'body',
-      title: 'Body',
+      name: 'content',
+      title: 'Section Content',
       type: 'localeAdvancedBlockContent'
     },
     {
-      name: 'subSections',
+      name: 'sections',
       title: 'Sub Sections',
       type: 'array',
       of: [{

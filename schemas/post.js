@@ -60,8 +60,19 @@ export default {
       description: 'This will be shown in list views and shared on social media. 140 characters max length.'
     },
     {
-      name: 'body',
-      title: 'Body',
+      title: 'Theme',
+      name: 'theme',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Default', value: 'default'},
+          {title: 'Victorian', value: 'victorian'}
+        ]
+      }
+    },
+    {
+      name: 'sections',
+      title: 'Post Sections',
       type: 'array',
       of: [{
         type: 'reference',
@@ -69,7 +80,9 @@ export default {
       }]
     }
   ],
-
+  initialValue: {
+    theme: 'default'
+  },
   preview: {
     select: {
       title: 'title.en',
