@@ -149,14 +149,14 @@ export default {
               {
                 name: 'footnote',
                 type: 'object',
-                title: 'Footnote',
-                description: 'Use this for text that is in a different language',
+                title: 'Footnote'
                 blockEditor: {
                   icon: File
                 },
                 fields: [
                   {
-                    name: 'lang',
+                    name: 'content',
+                    title: 'Footnote Content'
                     type: 'simpleBlockContent'
                   }
                 ]
