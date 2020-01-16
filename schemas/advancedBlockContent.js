@@ -149,14 +149,14 @@ export default {
               {
                 name: 'footnote',
                 type: 'object',
-                title: 'Footnote'
+                title: 'Footnote',
                 blockEditor: {
                   icon: File
                 },
                 fields: [
                   {
                     name: 'content',
-                    title: 'Footnote Content'
+                    title: 'Footnote Content',
                     type: 'simpleBlockContent'
                   }
                 ]
