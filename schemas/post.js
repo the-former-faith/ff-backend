@@ -81,7 +81,7 @@ export default {
     }
   ],
   initialValue: {
-    theme: 'default'
+    theme: 'defaultTheme'
   },
   preview: {
     select: {
