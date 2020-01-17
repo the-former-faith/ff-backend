@@ -65,7 +65,7 @@ export default {
       type: 'string',
       options: {
         list: [
-          {title: 'Default', value: 'default'},
+          {title: 'Default', value: 'defaultTheme'},
           {title: 'Victorian', value: 'victorian'}
         ]
       }
