@@ -24,24 +24,16 @@ export default {
       name: 'author',
       title: 'Author',
       type: 'reference',
-      to: {type: 'person'}
+      to: {type: 'person'},
+      fieldset: 'metadata'
     },
     {
       name: 'editors',
       title: 'Editors',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'person'}}]
-    },
-    {
-      name: 'mainImage',
-      title: 'Main image',
-      type: 'localeImage'
-    },
-    {
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}]
+      validation: Rule => Rule.unique().error('You can only have one of a person'),
+      of: [{type: 'reference', to: {type: 'person'}}],
+      fieldset: 'metadata'
     },
     {
       name: 'publishedAt',
@@ -49,15 +41,38 @@ export default {
       type: 'datetime'
     },
     {
+      name: 'mainImage',
+      title: 'Main image',
+      type: 'imageObject'
+    },
+    {
+      name: 'sections',
+      title: 'Post Content Sections',
+      description: 'Click on a section title to edit the content',
+      type: 'array',
+      of: [{type: 'section'}],
+      options: {editModal:'fullscreen'}
+    },
+    {
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      validation: Rule => Rule.unique().error('You already have that category listed.'),
+      of: [{type: 'reference', to: {type: 'category'}}],
+      fieldset: 'metadata'
+    },
+    {
       name: 'longDescription',
       title: 'Long Description',
-      type: 'localeSimpleBlockContent'
+      type: 'localeSimpleBlockContent',
+      fieldset: 'metadata'
     },
     {
       name: 'shortDescription',
       title: 'Short Description',
       type: 'localeBlurb',
-      description: 'This will be shown in list views and shared on social media. 140 characters max length.'
+      description: 'This will be shown in list views and shared on social media. 140 characters max length.',
+      fieldset: 'metadata'
     },
     {
       title: 'Theme',
@@ -69,15 +84,16 @@ export default {
           {title: 'Victorian', value: 'victorian'}
         ]
       }
-    },
+    }
+  ],
+  fieldsets: [
     {
-      name: 'sections',
-      title: 'Post Sections',
-      type: 'array',
-      of: [{
-        type: 'reference',
-        to: [{type: 'section'}]
-      }]
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
     }
   ],
   initialValue: {
@@ -87,7 +103,7 @@ export default {
     select: {
       title: 'title.en',
       author: 'author.name',
-      media: 'mainImage.en'
+      media: 'mainImage.imageFile.image'
     },
     prepare(selection) {
       const {author} = selection

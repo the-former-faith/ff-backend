@@ -10,7 +10,7 @@ export default {
     {
       name: 'title',
       title: 'Title',
-      type: 'localeString'
+      type: 'string'
     },
     {
       name: 'slug',
@@ -22,7 +22,7 @@ export default {
       }
     },
     {
-      name: 'mainImage',
+      name: 'image',
       type: 'image',
       title: 'Image',
       options: {
@@ -43,6 +43,12 @@ export default {
           name: 'dateCreated',
           type: 'datetime',
           title: 'Date Created',
+        },
+        {
+          name: 'altText',
+          type: 'localeString',
+          title: 'Alt Text',
+          validation: Rule => Rule.required()
         },
         {
           name: 'source',
@@ -74,7 +80,7 @@ export default {
   preview: {
     select: {
       title: 'title',
-      media: 'mainImage'
+      media: 'image'
     }
   }
 }

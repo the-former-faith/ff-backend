@@ -9,18 +9,19 @@ export default {
       type: 'reference',
       to: [
         { type: 'imageDoc' }
-      ]
+      ],
+      validation: Rule => Rule.required()
     },
     {
       name: 'caption',
       type: 'simpleBlockContent',
       title: 'Caption'
-    },
-    {
-      name: 'altText',
-      type: 'string',
-      title: 'Alt Text',
-      validation: Rule => Rule.required(),
     }
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'imageFile.title',
+      media: 'imageFile.image'
+    }
+  }
 }

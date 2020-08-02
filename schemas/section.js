@@ -4,12 +4,30 @@ export default {
   name: 'section',
   title: 'Section',
   icon: Indent,
-  type: 'document',
+  type: 'object',
   fields: [
     {
-      name: 'heading',
-      title: 'Heading',
-      type: 'localeString'
+      name: 'headingText',
+      title: 'Heading Text',
+      type: 'localeString',
+      validation: Rule => Rule.required(),
+      fieldset: 'heading'
+    },
+    {
+      name: 'headingLevel',
+      title: 'Heading Level',
+      type: 'string',
+      validation: Rule => Rule.required(),
+      fieldset: 'heading',
+      options: {
+        list: ['h2','h3','h4','h5','h6']
+      }
+    },
+    {
+      name: 'content',
+      title: 'Section Content',
+      type: 'localeAdvancedBlockContent',
+      validation: Rule => Rule.required()
     },
     {
       name: 'author',
@@ -18,57 +36,47 @@ export default {
       to: {type: 'person'}
     },
     {
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime'
+      name: 'sectionImage',
+      title: 'Section Image',
+      type: 'imageObject',
+      fieldset: 'appearance'
     },
     {
-      name: 'content',
-      title: 'Section Content',
-      type: 'localeAdvancedBlockContent'
+      name: 'sectionColor',
+      title: 'Section Color',
+      type: 'color',
+      fieldset: 'appearance'
     },
     {
-      name: 'sections',
-      title: 'Sub Sections',
-      type: 'array',
-      of: [{
-        type: 'reference',
-        to: [{type: 'section'}]
-      }]
+      name: 'sectionAttachment',
+      title: 'Section Attachment',
+      type: 'file',
+      fieldset: 'appearance'
+    }
+  ],
+  fieldsets: [
+    {
+      name: 'heading', 
+      title: 'Section Heading',
+      options: {
+        columns: 2
+      }
     },
     {
       name: 'appearance',
       title: 'Appearance',
       description: 'These are fields that themes will use in different ways.',
-      type: 'object',
       options: {
         collapsible: true, 
         collapsed: true
       },
-      fields: [
-        {
-          name: 'sectionImage',
-          title: 'Section Image',
-          type: 'localeImage'
-        },
-        {
-          name: 'sectionColor',
-          title: 'Section Color',
-          type: 'color'
-        },
-        {
-          name: 'sectionAttachment',
-          title: 'Section Attachment',
-          type: 'file'
-        },
-      ]
     }
   ],
   preview: {
     select: {
-      title: 'heading.en',
+      title: 'headingText.en',
       author: 'author.name',
-      media: 'sectionImage.en'
+      media: 'sectionImage.imageFile.image'
     }
   }
 }

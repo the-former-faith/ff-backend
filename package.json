@@ -15,25 +15,25 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/base": "^0.147.8",
-    "@sanity/color-input": "^0.147.0",
-    "@sanity/components": "^0.147.9",
-    "@sanity/core": "^0.147.9",
-    "@sanity/default-layout": "^0.147.9",
-    "@sanity/default-login": "^0.147.0",
-    "@sanity/desk-tool": "^0.147.9",
-    "@sanity/google-maps-input": "^0.147.9",
-    "@sanity/language-filter": "^0.147.0",
-    "@sanity/vision": "^0.147.9",
+    "@sanity/base": "^1.149.18",
+    "@sanity/color-input": "^1.149.16",
+    "@sanity/components": "^1.149.18",
+    "@sanity/core": "^1.149.18",
+    "@sanity/default-layout": "^1.149.18",
+    "@sanity/default-login": "^1.149.18",
+    "@sanity/desk-tool": "^1.149.18",
+    "@sanity/google-maps-input": "^1.149.16",
+    "@sanity/language-filter": "^1.149.0",
+    "@sanity/vision": "^1.149.16",
     "deepmerge": "^3.3.0",
     "is-plain-object": "^2.0.4",
-    "lodash": "^4.17.15",
-    "prop-types": "^15.6",
-    "react": "^16.12.0",
+    "lodash": "^4.17.19",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
     "react-autocomplete": "^1.8.1",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "@sanity/cli": "^0.147.8"
+    "@sanity/cli": "^1.149.18"
   }
 }

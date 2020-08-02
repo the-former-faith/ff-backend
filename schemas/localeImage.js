@@ -7,5 +7,10 @@ export default {
     title: lang.title,
     name: lang.id,
     type: 'imageObject'
-  }))
+  })),
+  preview: {
+    select: {
+      media: 'en.id.imageFile.image'
+    }
+  }
 }
