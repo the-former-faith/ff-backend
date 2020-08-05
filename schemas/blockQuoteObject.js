@@ -1,7 +1,10 @@
+import Quote from 'react-icons/lib/fa/quote-left'
+
 export default {
   name: 'blockQuoteObject',
   title: 'Block Quote',
   type: 'object',
+  icon: Quote,
   fields: [
     {
       name: 'text',
@@ -31,5 +34,25 @@ export default {
       ]
       
     },
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'text',
+      givenNames: 'source.author.givenNames.en',
+      familyName: 'source.author.familyName.en'
+    },
+    prepare(selection) {
+      const {givenNames, familyName, title } = selection
+      console.log(title)
+      const quoteText = title.map(x => {
+        return x.children.map(y => {
+          return y.text
+        })
+      })
+      return {
+        title: quoteText.join(' '),
+        subtitle: givenNames.join(' ') + ' ' + (familyName ? familyName : '')
+      }
+    }
+  }
 }

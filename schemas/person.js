@@ -17,7 +17,7 @@ export default {
       type: 'localeString'
     },
     {
-      name: 'image',
+      name: 'mainImage',
       title: 'Image',
       type: 'localeImage',
     },
@@ -56,12 +56,14 @@ export default {
   preview: {
     select: {
       givenNames: 'givenNames.en',
-      familyName: 'familyName.en'
+      familyName: 'familyName.en',
+      media: 'mainImage.en.imageFile.image'
     },
     prepare(selection) {
-      const {givenNames, familyName} = selection
+      const {givenNames, familyName, media } = selection
       return {
-        title: givenNames.join(' ') + ' ' + (familyName ? familyName : '')
+        title: givenNames.join(' ') + ' ' + (familyName ? familyName : ''),
+        media: media
       }
     }
   }
