@@ -42,16 +42,34 @@ export default {
       familyName: 'source.author.familyName.en'
     },
     prepare(selection) {
-      const {givenNames, familyName, title } = selection
-      console.log(title)
-      const quoteText = title.map(x => {
-        return x.children.map(y => {
-          return y.text
-        })
-      })
+      const { title } = selection
+      
+      const quoteText = (t = []) => 
+        t.map((x) => 
+              x.children
+                ? x.children.map((y) => y.text) 
+                : x);
+
+      const joinWithSpace = (t = []) => t.join(" ")
+            
+      const joinedText = joinWithSpace(quoteText(title))
+
+      const parseGivenName = (x = { givenNames: [] }) =>
+        x.givenNames ? x.givenNames.join(" ") : "";
+
+      const parseFamilyName = (x) => x.familyName || "";
+
+      const combineNames = (x) => {
+        const givenName = parseGivenName(x);
+        const familyName = parseFamilyName(x);
+        return givenName && familyName ? `${givenName} ${familyName}` : familyName || givenName
+      };
+
+      const displayName = x => combineNames(x) || "Unattributed"
+
       return {
-        title: quoteText.join(' '),
-        subtitle: givenNames.join(' ') + ' ' + (familyName ? familyName : '')
+        title: joinedText,
+        subtitle: displayName(selection)
       }
     }
   }
