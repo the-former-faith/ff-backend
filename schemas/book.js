@@ -1,9 +1,9 @@
-import Book from 'react-icons/lib/fa/book'
+import FaBook from 'react-icons/fa'
 
 export default {
   name: 'book',
   title: 'Book',
-  icon: Book,
+  icon: FaBook,
   type: 'document',
   fields: [
     {

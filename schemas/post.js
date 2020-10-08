@@ -1,9 +1,9 @@
-import File from 'react-icons/lib/fa/file'
+import FaFileAlt from 'react-icons/fa/'
 
 export default {
   name: 'post',
   title: 'Post',
-  icon: File,
+  icon: FaFileAlt,
   type: 'document',
   fields: [
     {

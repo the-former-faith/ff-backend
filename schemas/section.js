@@ -1,9 +1,9 @@
-import Indent from 'react-icons/lib/fa/paragraph'
+import FaParagraph from 'react-icons/fa'
 
 export default {
   name: 'section',
   title: 'Section',
-  icon: Indent,
+  icon: FaParagraph,
   type: 'object',
   fields: [
     {

@@ -1,10 +1,10 @@
-import Quote from 'react-icons/lib/fa/quote-left'
+import FaQuoteLeft from 'react-icons/fa'
 
 export default {
   name: 'blockQuoteObject',
   title: 'Block Quote',
   type: 'object',
-  icon: Quote,
+  icon: FaQuoteLeft,
   fields: [
     {
       name: 'text',

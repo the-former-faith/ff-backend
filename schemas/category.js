@@ -1,9 +1,9 @@
-import Tag from 'react-icons/lib/fa/tag'
+import FaTag from 'react-icons/fa'
 
 export default {
   name: 'category',
   title: 'Category',
-  icon: Tag,
+  icon: FaTag,
   type: 'document',
   fields: [
     {

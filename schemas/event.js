@@ -1,9 +1,9 @@
-import Calendar from 'react-icons/lib/fa/calendar'
+import FaRegCalendarAlt from 'react-icons/fa'
 
 export default {
   name: 'event',
   title: 'Event',
-  icon: Calendar,
+  icon: FaRegCalendarAlt,
   type: 'document',
   fields: [
     {

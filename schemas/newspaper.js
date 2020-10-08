@@ -1,9 +1,9 @@
-import Newspaper from 'react-icons/lib/fa/newspaper-o'
+import FaNewspaper from 'react-icons/fa'
 
 export default {
   name: 'newspaper',
   title: 'Newspaper',
-  icon: Newspaper,
+  icon: FaNewspaper,
   type: 'document',
   fields: [
     {

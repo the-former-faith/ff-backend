@@ -1,10 +1,10 @@
 import Select from '../components/Select'
-import Pic from 'react-icons/lib/fa/image'
+import FaRegImage from 'react-icons/fa'
 
 export default {
   name: 'imageDoc',
   title: 'Image',
-  icon: Pic,
+  icon: FaRegImage,
   type: 'document',
   fields: [
     {

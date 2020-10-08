@@ -1,9 +1,9 @@
-import User from 'react-icons/lib/fa/user'
+import FaUserAlt from 'react-icons/fa'
 
 export default {
   name: 'person',
   title: 'Person',
-  icon: User,
+  icon: FaUserAlt,
   type: 'document',
   fields: [
     {

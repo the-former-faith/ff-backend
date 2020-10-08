@@ -1,9 +1,9 @@
-import Newspaper from 'react-icons/lib/fa/newspaper-o'
+import FaRegFileAlt from 'react-icons/fa'
 
 export default {
   name: 'newspaperArticle',
   title: 'Newspaper Article',
-  icon: Newspaper,
+  icon: FaRegFileAlt,
   type: 'document',
   fields: [
     {

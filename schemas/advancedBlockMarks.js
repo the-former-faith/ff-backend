@@ -1,11 +1,11 @@
-import Paperclip from 'react-icons/lib/fa/paperclip'
-import User from 'react-icons/lib/fa/user'
-import Language from 'react-icons/lib/fa/language'
-import File from 'react-icons/lib/fa/sticky-note'
-import Ellipsis from 'react-icons/lib/fa/ellipsis-h'
-import Quote from 'react-icons/lib/fa/quote-left'
-import MapMarker from 'react-icons/lib/fa/map-marker'
-import Calendar from 'react-icons/lib/fa/calendar'
+import FaPaperclip from 'react-icons/fa'
+import FaUserAlt from 'react-icons/fa'
+import FaLanguage from 'react-icons/fa'
+import FaFileAlt from 'react-icons/fa'
+import FaEllipsisH from 'react-icons/fa'
+import FaQuoteLeft from 'react-icons/fa'
+import FaMapMarkerAlt from 'react-icons/fa'
+import FaRegCalendarAlt from 'react-icons/fa'
 
 export default [
   {
@@ -24,7 +24,7 @@ export default [
     type: 'object',
     title: 'Internal link',
     blockEditor: {
-      icon: Paperclip
+      icon: FaPaperclip
     },
     fields: [
       {
@@ -42,7 +42,7 @@ export default [
     type: 'object',
     title: 'Person link',
     blockEditor: {
-      icon: User
+      icon: FaUserAlt
     },
     fields: [
       {
@@ -59,7 +59,7 @@ export default [
     type: 'object',
     title: 'Event link',
     blockEditor: {
-      icon: Calendar
+      icon: FaRegCalendarAlt
     },
     fields: [
       {
@@ -76,7 +76,7 @@ export default [
     type: 'object',
     title: 'Location link',
     blockEditor: {
-      icon: MapMarker
+      icon: FaMapMarkerAlt
     },
     fields: [
       {
@@ -94,7 +94,7 @@ export default [
     title: 'Language Tag',
     description: 'Use this for text that is in a different language',
     blockEditor: {
-      icon: Language
+      icon: FaLanguage
     },
     fields: [
       {
@@ -109,7 +109,7 @@ export default [
     type: 'object',
     title: 'Abbreviation',
     blockEditor: {
-      icon: Ellipsis
+      icon: FaEllipsisH
     },
     fields: [
       {
@@ -125,7 +125,7 @@ export default [
     type: 'object',
     title: 'Inline Quote',
     blockEditor: {
-      icon: Quote
+      icon: FaQuoteLeft
     },
     fields: [
       {
@@ -140,7 +140,7 @@ export default [
     type: 'object',
     title: 'Footnote',
     blockEditor: {
-      icon: File
+      icon: FaFileAlt
     },
     fields: [
       {

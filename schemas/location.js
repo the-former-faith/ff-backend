@@ -1,9 +1,9 @@
-import MapMarker from 'react-icons/lib/fa/map-marker'
+import FaMapMarkerAlt from 'react-icons/fa'
 
 export default {
   name: 'location',
   title: 'Location',
-  icon: MapMarker,
+  icon: FaMapMarkerAlt,
   type: 'document',
   fields: [
     {
