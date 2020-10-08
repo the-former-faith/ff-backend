@@ -10,14 +10,12 @@ export default {
       name: 'headingText',
       title: 'Heading Text',
       type: 'localeString',
-      validation: Rule => Rule.required(),
       fieldset: 'heading'
     },
     {
       name: 'headingLevel',
       title: 'Heading Level',
       type: 'string',
-      validation: Rule => Rule.required(),
       fieldset: 'heading',
       options: {
         list: ['h2','h3','h4','h5','h6']
@@ -26,8 +24,7 @@ export default {
     {
       name: 'content',
       title: 'Section Content',
-      type: 'localeAdvancedBlockContent',
-      validation: Rule => Rule.required()
+      type: 'localeAdvancedBlockContent'
     },
     {
       name: 'author',

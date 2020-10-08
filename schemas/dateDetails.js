@@ -7,7 +7,7 @@ export default {
   	{
       name: 'time',
       title: 'Time',
-      type: 'string',
+      type: 'datetime',
     },
     {
       name: 'sourcingCircumstances',

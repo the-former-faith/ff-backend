@@ -147,6 +147,15 @@ export default [
         name: 'content',
         title: 'Footnote Content',
         type: 'simpleBlockContent'
+      },
+      {
+        title: 'Citations',
+        name: 'citations',
+        type: 'array',
+        of: [
+          {type: 'citationBook'},
+          {type: 'citationNewspaperArticle'}
+        ]
       }
     ]
   }

@@ -6,8 +6,11 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 
 // We import object and document schemas
 import simpleBlockContent from './simpleBlockContent'
+import book from './book'
 import category from './category'
 import chartBlock from './chartBlock'
+import citationBook from './citationBook'
+import citationNewspaperArticle from './citationNewspaperArticle'
 import post from './post'
 import person from './person'
 import section from './section'
@@ -21,6 +24,8 @@ import localeAdvancedBlockContent from './localeAdvancedBlockContent'
 import localeStringArray from './localeStringArray'
 import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
+import newspaper from './newspaper'
+import newspaperArticle from './newspaperArticle'
 import advancedBlockContent from './advancedBlockContent'
 import blockQuoteObject from './blockQuoteObject'
 import imageDoc from './imageDoc'
@@ -37,11 +42,14 @@ export default createSchema({
     // The following are document types which will appear
     // in the studio.
     post,
+    book,
     category,
     imageDoc,
     person,
     event,
     location,
+    newspaper,
+    newspaperArticle,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     section,
@@ -50,6 +58,8 @@ export default createSchema({
     localeString,
     localeSlug,
     chartBlock,
+    citationBook,
+    citationNewspaperArticle,
     dateObject,
     dateDetails,
     localeSimpleBlockContent,
