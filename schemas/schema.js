@@ -19,6 +19,7 @@ import localeSlug from './localeSlug'
 import dateObject from './dateObject'
 import dateDetails from './dateDetails'
 import imageObject from './imageObject'
+import videoObject from './videoObject'
 import localeSimpleBlockContent from './localeSimpleBlockContent'
 import localeAdvancedBlockContent from './localeAdvancedBlockContent'
 import localeStringArray from './localeStringArray'
@@ -29,8 +30,10 @@ import newspaperArticle from './newspaperArticle'
 import advancedBlockContent from './advancedBlockContent'
 import blockQuoteObject from './blockQuoteObject'
 import imageDoc from './imageDoc'
+import videoDoc from './videoDoc'
 import location from './location'
 import event from './event'
+import time from './time'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -45,6 +48,7 @@ export default createSchema({
     book,
     category,
     imageDoc,
+    videoDoc,
     person,
     event,
     location,
@@ -54,6 +58,7 @@ export default createSchema({
     // { type: 'typename' } in other document schemas
     section,
     imageObject,
+    videoObject,
     simpleBlockContent,
     localeString,
     localeSlug,
@@ -68,6 +73,7 @@ export default createSchema({
     localeBlurb,
     localeImage,
     advancedBlockContent,
-    blockQuoteObject
+    blockQuoteObject,
+    time
   ])
 })

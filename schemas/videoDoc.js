@@ -2,8 +2,8 @@ import Select from '../components/Select'
 import FaRegImage from 'react-icons/fa'
 
 export default {
-  name: 'imageDoc',
-  title: 'Image',
+  name: 'videoDoc',
+  title: 'Video',
   icon: FaRegImage,
   type: 'document',
   fields: [
@@ -22,17 +22,22 @@ export default {
       }
     },
     {
-      name: 'image',
-      type: 'image',
-      title: 'Image',
+      name: 'video',
+      type: 'file',
+      title: 'Video',
       options: {
-        hotspot: true
+        accept: 'video/*'
       },
       fields: [
         {
           name: 'creator',
           title: 'Creator',
-          type: 'string'
+          type: 'array',
+          of: [
+            {
+              type: 'string'
+            }
+          ]
         },
         {
           name: 'dateCreated',
@@ -57,15 +62,8 @@ export default {
           inputComponent: Select,
           options: {
             values: [
-              {title: 'Unknown', value: 'NA'},
-              {title: 'Copyright', value: 'C'},
               {title: 'Public Domain', value: 'PD'},
-              {title: 'Creative Commons Attribution (CC BY)', value: 'CC_BY'},
-              {title: 'Creative Commons Attribution ShareAlike (CC BY-SA)', value: 'CC_BY-SA'},
-              {title: 'Creative Commons Attribution-NoDerivs (CC BY-ND)', value: 'CC_BY-ND'},
-              {title: 'Creative Commons Attribution-NonCommercial (CC BY-NC)', value: 'CC_BY-NC'},
-              {title: 'Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', value: 'CC_BY-NC-SA'},
-              {title: 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', value: 'CC_BY-NC-ND'},
+              {title: 'Creative Commons 1', value: 'CC1'}
             ]
           }
         },
