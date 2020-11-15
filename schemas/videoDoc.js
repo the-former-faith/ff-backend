@@ -1,10 +1,10 @@
 import Select from '../components/Select'
-import FaRegImage from 'react-icons/fa'
+import { FaFilm } from 'react-icons/fa'
 
 export default {
   name: 'videoDoc',
   title: 'Video',
-  icon: FaRegImage,
+  icon: FaFilm,
   type: 'document',
   fields: [
     {

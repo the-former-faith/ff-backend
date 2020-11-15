@@ -1,11 +1,12 @@
-import FaPaperclip from 'react-icons/fa'
-import FaUserAlt from 'react-icons/fa'
-import FaLanguage from 'react-icons/fa'
-import FaFileAlt from 'react-icons/fa'
-import FaEllipsisH from 'react-icons/fa'
-import FaQuoteLeft from 'react-icons/fa'
-import FaMapMarkerAlt from 'react-icons/fa'
-import FaRegCalendarAlt from 'react-icons/fa'
+import { 
+  FaPaperclip, 
+  FaUserAlt, 
+  FaLanguage, 
+  FaFileAlt, 
+  FaEllipsisH, 
+  FaQuoteLeft, 
+  FaMapMarkerAlt, 
+  FaRegCalendarAlt } from 'react-icons/fa'
 
 export default [
   {

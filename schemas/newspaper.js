@@ -1,4 +1,4 @@
-import FaNewspaper from 'react-icons/fa'
+import { FaNewspaper } from 'react-icons/fa'
 
 export default {
   name: 'newspaper',

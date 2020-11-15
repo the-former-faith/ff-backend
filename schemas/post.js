@@ -1,4 +1,5 @@
-import FaFileAlt from 'react-icons/fa/'
+import { FaFileAlt } from 'react-icons/fa/'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'post',
@@ -6,45 +7,7 @@ export default {
   icon: FaFileAlt,
   type: 'document',
   fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      type: 'localeString'
-    },
-    {
-      name: 'slug',
-      title: 'Slug',
-      type: 'localeSlug',
-      options: {
-        source: 'title',
-        maxLength: 96
-      }
-    },
-    {
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: {type: 'person'},
-      fieldset: 'metadata'
-    },
-    {
-      name: 'editors',
-      title: 'Editors',
-      type: 'array',
-      validation: Rule => Rule.unique().error('You can only have one of a person'),
-      of: [{type: 'reference', to: {type: 'person'}}],
-      fieldset: 'metadata'
-    },
-    {
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime'
-    },
-    {
-      name: 'mainImage',
-      title: 'Main image',
-      type: 'imageObject'
-    },
+    ...docMetadata,
     {
       name: 'sections',
       title: 'Post Content Sections',
@@ -59,19 +22,6 @@ export default {
       type: 'array',
       validation: Rule => Rule.unique().error('You already have that category listed.'),
       of: [{type: 'reference', to: {type: 'category'}}],
-      fieldset: 'metadata'
-    },
-    {
-      name: 'longDescription',
-      title: 'Long Description',
-      type: 'localeSimpleBlockContent',
-      fieldset: 'metadata'
-    },
-    {
-      name: 'shortDescription',
-      title: 'Short Description',
-      type: 'localeBlurb',
-      description: 'This will be shown in list views and shared on social media. 140 characters max length.',
       fieldset: 'metadata'
     },
     {

@@ -1,4 +1,5 @@
-import FaUserAlt from 'react-icons/fa'
+import { FaUserAlt } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'person',
@@ -6,6 +7,7 @@ export default {
   icon: FaUserAlt,
   type: 'document',
   fields: [
+    ...docMetadata,
     {
       name: 'givenNames',
       title: 'Given Names',
@@ -15,11 +17,6 @@ export default {
       name: 'familyName',
       title: 'Family Name',
       type: 'localeString'
-    },
-    {
-      name: 'mainImage',
-      title: 'Image',
-      type: 'localeImage',
     },
     {
       name: 'dateOfBirth',
@@ -53,16 +50,25 @@ export default {
       type: 'localeAdvancedBlockContent'
     }
   ],
+  fieldsets: [
+    {
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
+    }
+  ],
   preview: {
     select: {
-      givenNames: 'givenNames.en',
-      familyName: 'familyName.en',
+      title: 'title.en',
       media: 'mainImage.en.imageFile.image'
     },
     prepare(selection) {
-      const {givenNames, familyName, media } = selection
+      const { title, media } = selection
       return {
-        title: givenNames.join(' ') + ' ' + (familyName ? familyName : ''),
+        title: title,
         media: media
       }
     }

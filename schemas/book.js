@@ -1,4 +1,5 @@
-import FaBook from 'react-icons/fa'
+import { FaBook } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'book',
@@ -6,39 +7,16 @@ export default {
   icon: FaBook,
   type: 'document',
   fields: [
+    ...docMetadata,
+  ],
+  fieldsets: [
     {
-      name: 'title',
-      title: 'Title',
-      type: 'localeString',
-    },
-    {
-      name: 'mainImage',
-      title: 'Cover Image',
-      type: 'localeImage',
-    },
-    {
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: {type: 'person'}
-    },
-    {
-      name: 'date',
-      title: 'Date Published',
-      type: 'dateObject',
-    },
-    {
-      name: 'place',
-      title: 'Place Published',
-      type: 'reference',
-      to: [
-        { type: 'location' }
-      ]
-    },
-    {
-      name: 'description',
-      title: 'Description',
-      type: 'localeAdvancedBlockContent'
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
     }
   ],
   preview: {

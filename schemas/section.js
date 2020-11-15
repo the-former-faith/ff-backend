@@ -1,4 +1,4 @@
-import FaParagraph from 'react-icons/fa'
+import { FaParagraph } from 'react-icons/fa'
 
 export default {
   name: 'section',

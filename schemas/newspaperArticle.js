@@ -1,4 +1,5 @@
-import FaRegFileAlt from 'react-icons/fa'
+import { FaRegFileAlt } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'newspaperArticle',
@@ -6,16 +7,7 @@ export default {
   icon: FaRegFileAlt,
   type: 'document',
   fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      type: 'localeString',
-    },
-    {
-      name: 'mainImage',
-      title: 'Image of Article',
-      type: 'image',
-    },
+    ...docMetadata,
     {
       name: 'sections',
       title: 'Post Content Sections',
@@ -42,12 +34,6 @@ export default {
       type: 'number'
     },
     {
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: {type: 'person'}
-    },
-    {
       name: 'date',
       title: 'Date Published',
       type: 'dateObject',
@@ -70,6 +56,14 @@ export default {
     {
       name: 'source', 
       title: 'Source',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
+    },
+    {
+      name: 'metadata', 
+      title: 'Metadata',
       options: {
         collapsible: true,
         collapsed: true

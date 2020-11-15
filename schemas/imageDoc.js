@@ -1,10 +1,10 @@
 import Select from '../components/Select'
-import FaRegImage from 'react-icons/fa'
+import { FaImage } from 'react-icons/fa'
 
 export default {
   name: 'imageDoc',
   title: 'Image',
-  icon: FaRegImage,
+  icon: FaImage,
   type: 'document',
   fields: [
     {
@@ -70,10 +70,21 @@ export default {
           }
         },
         {
+          name: 'permissionGranted',
+          type: 'boolean',
+          title: 'Used with permission',
+        },
+        {
           name: 'notes',
           type: 'simpleBlockContent',
-          title: 'Notes',
+          title: 'Public Notes',
           description: 'If there are special requirements for attribution from the owner, they can be put here.'
+        },
+        {
+          name: 'notesInternal',
+          type: 'simpleBlockContent',
+          title: 'Internal Notes',
+          description: 'You might want to put details here about how the permission was attained, in case it was ever needed.'
         },
       ]
     }

@@ -1,4 +1,4 @@
-import FaQuoteLeft from 'react-icons/fa'
+import { FaQuoteLeft } from 'react-icons/fa'
 
 export default {
   name: 'blockQuoteObject',
