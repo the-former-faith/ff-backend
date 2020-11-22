@@ -33,7 +33,8 @@ export default [
     {
         name: 'mainImage',
         title: 'Main image',
-        type: 'localeImage'
+        type: 'reference', 
+        to: {type: 'imageDoc'}
     },
     {
         name: 'longDescription',
