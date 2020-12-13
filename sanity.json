@@ -17,7 +17,8 @@
     "@sanity/color-input",
     "@sanity/vision",
     "@sanity/dashboard",
-    "dashboard-widget-netlify"
+    "dashboard-widget-netlify",
+    "@sanity/production-preview"
   ],
   "parts": [
     {
@@ -31,6 +32,10 @@
     {
       "implements": "part:@sanity/dashboard/config",
       "path": "src/dashboardConfig.js"
+    },
+    {
+      "implements": "part:@sanity/production-preview/resolve-production-url",
+      "path": "./parts/resolveProductionUrl.js"
     }
   ]
 }
