@@ -49,4 +49,9 @@ export default [
         description: 'This will be shown in list views and shared on social media. 140 characters max length.',
         fieldset: 'metadata'
     },
+    {
+        name: 'content',
+        title: 'Section Content',
+        type: 'localeAdvancedBlockContent'
+      },
 ]

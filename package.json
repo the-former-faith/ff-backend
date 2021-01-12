@@ -15,18 +15,18 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/base": "^2.1.2",
-    "@sanity/color-input": "^2.1.0",
-    "@sanity/components": "^2.1.0",
-    "@sanity/core": "^2.1.2",
-    "@sanity/dashboard": "^2.1.0",
-    "@sanity/default-layout": "^2.1.2",
-    "@sanity/default-login": "^2.1.0",
-    "@sanity/desk-tool": "^2.1.2",
-    "@sanity/google-maps-input": "^2.1.2",
-    "@sanity/language-filter": "^2.1.0",
-    "@sanity/production-preview": "^2.1.0",
-    "@sanity/vision": "^2.1.0",
+    "@sanity/base": "^2.1.4",
+    "@sanity/color-input": "^2.1.4",
+    "@sanity/components": "^2.1.4",
+    "@sanity/core": "^2.1.4",
+    "@sanity/dashboard": "^2.1.4",
+    "@sanity/default-layout": "^2.1.4",
+    "@sanity/default-login": "^2.1.4",
+    "@sanity/desk-tool": "^2.1.4",
+    "@sanity/google-maps-input": "^2.1.4",
+    "@sanity/language-filter": "^2.1.4",
+    "@sanity/production-preview": "^2.1.4",
+    "@sanity/vision": "^2.1.4",
     "deepmerge": "^3.3.0",
     "is-plain-object": "^2.0.4",
     "lodash": "^4.17.20",
@@ -38,6 +38,6 @@
     "sanity-plugin-dashboard-widget-netlify": "^1.0.1"
   },
   "devDependencies": {
-    "@sanity/cli": "^2.1.0"
+    "@sanity/cli": "^2.1.4"
   }
 }
