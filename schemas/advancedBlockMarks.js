@@ -145,18 +145,19 @@ export default [
     },
     fields: [
       {
-        name: 'content',
-        title: 'Footnote Content',
-        type: 'simpleBlockContent'
-      },
-      {
         title: 'Citations',
         name: 'citations',
         type: 'array',
         of: [
           {type: 'citationBook'},
-          {type: 'citationNewspaperArticle'}
+          {type: 'citationNewspaperArticle'},
+          {type: 'citationPublication'}
         ]
+      },
+      {
+        name: 'content',
+        title: 'Footnote Content',
+        type: 'simpleBlockContent'
       }
     ]
   }

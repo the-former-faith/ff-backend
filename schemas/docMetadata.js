@@ -15,7 +15,12 @@ export default [
             isUnique: input => input
         },
         validation: Rule => Rule.required()
-        },
+    },
+    {
+        name: 'subtitle',
+        title: 'Sub Title',
+        type: 'localeString'
+    },
     {
         name: 'authors',
         title: 'Authors',
@@ -33,8 +38,17 @@ export default [
     {
         name: 'mainImage',
         title: 'Main image',
-        type: 'reference', 
-        to: {type: 'imageDoc'}
+        type: 'image',
+        options: {
+            hotspot: true
+        },
+        fields: [
+            {
+                name: 'alt',
+                title: 'Text',
+                type: 'string'
+            },
+        ]
     },
     {
         name: 'longDescription',

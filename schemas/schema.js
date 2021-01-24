@@ -11,6 +11,7 @@ import category from './category'
 import chartBlock from './chartBlock'
 import citationBook from './citationBook'
 import citationNewspaperArticle from './citationNewspaperArticle'
+import citationPublication from './citationPublication'
 import post from './post'
 import person from './person'
 import section from './section'
@@ -27,6 +28,9 @@ import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
 import newspaper from './newspaper'
 import newspaperArticle from './newspaperArticle'
+import publication from './publication'
+import publicationArticle from './publicationArticle'
+import song from './song'
 import advancedBlockContent from './advancedBlockContent'
 import blockQuoteObject from './blockQuoteObject'
 import imageDoc from './imageDoc'
@@ -54,6 +58,9 @@ export default createSchema({
     location,
     newspaper,
     newspaperArticle,
+    publication,
+    publicationArticle,
+    song,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     section,
@@ -65,6 +72,7 @@ export default createSchema({
     chartBlock,
     citationBook,
     citationNewspaperArticle,
+    citationPublication,
     dateObject,
     dateDetails,
     localeSimpleBlockContent,

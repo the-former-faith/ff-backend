@@ -2,24 +2,17 @@ import { FaRegFileAlt } from 'react-icons/fa'
 import docMetadata from './docMetadata'
 
 export default {
-  name: 'newspaperArticle',
-  title: 'Newspaper Article',
+  name: 'publicationArticle',
+  title: 'Publication Article',
   icon: FaRegFileAlt,
   type: 'document',
   fields: [
     ...docMetadata,
     {
-      name: 'sections',
-      title: 'Post Content Sections',
-      description: 'Click on a section title to edit the content',
-      type: 'array',
-      of: [{type: 'section'}]
-    },
-    {
-      name: 'newspaper',
-      title: 'Newspaper',
+      name: 'publication',
+      title: 'Publication',
       type: 'reference',
-      to: {type: 'newspaper'},
+      to: {type: 'publication'},
       validation: Rule => Rule.required()
     },
     {
@@ -38,6 +31,16 @@ export default {
       title: 'Date Published',
       type: 'dateObject',
       validation: Rule => Rule.required()
+    },
+    {
+      name: 'volume',
+      title: 'Volume',
+      type: 'number'
+    },
+    {
+      name: 'issueNumber',
+      title: 'Issue Number',
+      type: 'number'
     },
     {
       name: 'url',
