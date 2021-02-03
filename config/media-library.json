@@ -1,1 +1,24 @@
-{}
+{
+  "customFields": [
+        {
+          "label": "Creator",
+          "name": "creator",
+          "type": "string"
+        },
+        {
+          "label": "Date Created",
+          "name": "dateCreated",
+          "type": "date"
+        },
+        {
+          "label": "Source URL",
+          "type": "url",
+          "name": "source"
+        },
+        {
+          "name": "permissionGranted",
+          "type": "checkbox",
+          "label": "Used with permission"
+        }
+  ]
+}

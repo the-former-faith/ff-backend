@@ -9,14 +9,7 @@ export default {
   fields: [
     ...docMetadata,
     {
-      name: 'sections',
-      title: 'Post Content Sections',
-      description: 'Click on a section title to edit the content',
-      type: 'array',
-      of: [{type: 'section'}]
-    },
-    {
-      name: 'newspaper',
+      name: 'parent',
       title: 'Newspaper',
       type: 'reference',
       to: {type: 'newspaper'},

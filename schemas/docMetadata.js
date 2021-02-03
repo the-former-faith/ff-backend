@@ -30,25 +30,12 @@ export default [
         fieldset: 'metadata'
     },
     {
-        name: 'publishedAt',
-        title: 'Published at',
-        type: 'datetime',
-        validation: Rule => Rule.required()
-    },
-    {
         name: 'mainImage',
         title: 'Main image',
         type: 'image',
         options: {
             hotspot: true
-        },
-        fields: [
-            {
-                name: 'alt',
-                title: 'Text',
-                type: 'string'
-            },
-        ]
+        }
     },
     {
         name: 'longDescription',
@@ -65,7 +52,7 @@ export default [
     },
     {
         name: 'content',
-        title: 'Section Content',
+        title: 'Content',
         type: 'localeAdvancedBlockContent'
       },
 ]

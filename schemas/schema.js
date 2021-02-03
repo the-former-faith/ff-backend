@@ -11,14 +11,14 @@ import category from './category'
 import chartBlock from './chartBlock'
 import citationBook from './citationBook'
 import citationNewspaperArticle from './citationNewspaperArticle'
-import citationPublication from './citationPublication'
+import citationPublication from './citationPublicationArticle'
+import citationUrl from './citationWebsiteArticle'
 import post from './post'
 import person from './person'
 import section from './section'
 import localeString from './localeString'
 import localeSlug from './localeSlug'
 import dateObject from './dateObject'
-import dateDetails from './dateDetails'
 import imageObject from './imageObject'
 import videoObject from './videoObject'
 import localeSimpleBlockContent from './localeSimpleBlockContent'
@@ -26,8 +26,10 @@ import localeAdvancedBlockContent from './localeAdvancedBlockContent'
 import localeStringArray from './localeStringArray'
 import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
+import mapObject from './mapObject'
 import newspaper from './newspaper'
 import newspaperArticle from './newspaperArticle'
+import newspaperArticleObject from './newspaperArticleObject'
 import publication from './publication'
 import publicationArticle from './publicationArticle'
 import song from './song'
@@ -38,6 +40,9 @@ import videoDoc from './videoDoc'
 import location from './location'
 import event from './event'
 import time from './time'
+import website from './website'
+import websiteArticle from './websiteArticle'
+import citationPublicationArticle from './citationPublicationArticle'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -61,6 +66,8 @@ export default createSchema({
     publication,
     publicationArticle,
     song,
+    website,
+    websiteArticle,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     section,
@@ -72,9 +79,9 @@ export default createSchema({
     chartBlock,
     citationBook,
     citationNewspaperArticle,
-    citationPublication,
+    citationPublicationArticle,
+    citationUrl,
     dateObject,
-    dateDetails,
     localeSimpleBlockContent,
     localeAdvancedBlockContent,
     localeStringArray,
@@ -82,6 +89,8 @@ export default createSchema({
     localeImage,
     advancedBlockContent,
     blockQuoteObject,
+    mapObject,
+    newspaperArticleObject,
     time
   ])
 })

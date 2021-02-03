@@ -9,7 +9,7 @@ export default {
   fields: [
     ...docMetadata,
     {
-      name: 'publication',
+      name: 'parent',
       title: 'Publication',
       type: 'reference',
       to: {type: 'publication'},

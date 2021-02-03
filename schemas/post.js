@@ -34,7 +34,7 @@ export default {
           {title: 'Victorian', value: 'victorian'}
         ]
       }
-    }
+    },
   ],
   fieldsets: [
     {

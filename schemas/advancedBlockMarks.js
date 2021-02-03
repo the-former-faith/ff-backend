@@ -151,7 +151,8 @@ export default [
         of: [
           {type: 'citationBook'},
           {type: 'citationNewspaperArticle'},
-          {type: 'citationPublication'}
+          {type: 'citationPublicationArticle'},
+          {type: 'citationWebsiteArticle'},
         ]
       },
       {

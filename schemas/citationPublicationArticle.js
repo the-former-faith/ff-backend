@@ -1,6 +1,6 @@
 export default {
     type: 'object',
-    name: 'citationPublication',
+    name: 'citationPublicationArticle',
     fields: [
         {
             name: 'source',

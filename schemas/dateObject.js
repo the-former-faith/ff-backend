@@ -2,27 +2,33 @@ export default {
   type: 'object',
   name: 'dateObject',
   fields: [
-  	{
-      name: 'date',
-      title: 'Date',
-      type: 'dateDetails',
+    {
+      name: 'time',
+      title: 'Time',
+      type: 'datetime',
     },
     {
-      name: 'dateQualifiers',
-      title: 'Date Qualifiers',
-      type: 'object',
-      fields: [
-        {
-          name: 'dateEarliest',
-          title: 'Earliest Date',
-          type: 'dateDetails',
-        },
-        {
-          name: 'dateLatest',
-          title: 'Latest Date',
-          type: 'dateDetails',
-        }
-      ]
+      name: 'precision',
+      title: 'Precision',
+      type: 'number',
+      options: {
+        list: [
+          {title: 'Millennium', value: 6},
+          {title: 'Century', value: 7},
+          {title: 'Decade', value: 8},
+          {title: 'Year', value: 9},
+          {title: 'Month', value: 10},
+          {title: 'Day', value: 11},
+          {title: 'Hour', value: 12},
+          {title: 'Minute', value: 13}
+        ]
+      },
+      validation: Rule => Rule.min(6).max(13)
+    },
+    {
+      name: 'calendar',
+      title: 'Calendar',
+      type: 'localeString',
     }
   ]
 }

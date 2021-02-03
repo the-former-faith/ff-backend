@@ -22,6 +22,12 @@ export default {
         },
         {
           type: 'chartBlock'
+        },
+        {
+          type: 'newspaperArticleObject'
+        },
+        {
+          type: 'mapObject'
         }
       ]
   

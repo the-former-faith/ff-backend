@@ -1,4 +1,3 @@
-import Select from '../components/Select'
 import { FaFilm } from 'react-icons/fa'
 
 export default {
@@ -59,7 +58,6 @@ export default {
           name: 'licenceTypes',
           type: 'string',
           title: 'License Type',
-          inputComponent: Select,
           options: {
             values: [
               {title: 'Public Domain', value: 'PD'},
