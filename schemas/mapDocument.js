@@ -1,16 +1,13 @@
 import { FaMapMarkedAlt } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
-  name: 'mapObject',
+  name: 'mapDocument',
   title: 'Map',
-  type: 'object',
+  type: 'document',
   icon: FaMapMarkedAlt,
   fields: [
-    {
-      name: 'text',
-      type: 'simpleBlockContent',
-      title: 'Text',
-    },
+    ...docMetadata,
     {
       title: 'Marker Points',
       name: 'points',
@@ -34,4 +31,20 @@ export default {
       }]
     }
   ],
+  fieldsets: [
+    {
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
+    }
+  ],
+  preview: {
+    select: {
+      title: 'title.en',
+      media: 'mainImage.image'
+    }
+  }
 }

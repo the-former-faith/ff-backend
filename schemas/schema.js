@@ -26,7 +26,7 @@ import localeAdvancedBlockContent from './localeAdvancedBlockContent'
 import localeStringArray from './localeStringArray'
 import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
-import mapObject from './mapObject'
+import mapDocument from './mapDocument'
 import newspaper from './newspaper'
 import newspaperArticle from './newspaperArticle'
 import newspaperArticleObject from './newspaperArticleObject'
@@ -68,6 +68,7 @@ export default createSchema({
     song,
     website,
     websiteArticle,
+    mapDocument,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     section,
@@ -89,7 +90,6 @@ export default createSchema({
     localeImage,
     advancedBlockContent,
     blockQuoteObject,
-    mapObject,
     newspaperArticleObject,
     time
   ])

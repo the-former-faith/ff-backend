@@ -1,4 +1,5 @@
 import { FaMapMarkerAlt } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'location',
@@ -6,20 +7,27 @@ export default {
   icon: FaMapMarkerAlt,
   type: 'document',
   fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      type: 'localeString',
-    },
+    ...docMetadata,
     {
       name: 'coordinates',
       title: 'Coordinates',
       type: 'geopoint',
     }
   ],
+  fieldsets: [
+    {
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
+    }
+  ],
   preview: {
     select: {
-      title: 'title.en'
+      title: 'title.en',
+      media: 'mainImage.image'
     }
   }
 }

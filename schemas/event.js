@@ -1,4 +1,5 @@
 import { FaRegCalendarAlt } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'event',
@@ -6,41 +7,39 @@ export default {
   icon: FaRegCalendarAlt,
   type: 'document',
   fields: [
+    ...docMetadata,
     {
-      name: 'title',
-      title: 'Title',
-      type: 'localeString'
+      name: 'date',
+      title: 'Date Began',
+      type: 'dateObject',
+      validation: Rule => Rule.required()
     },
     {
-      name: 'startTime',
-      title: 'Start Time',
+      name: 'dateEnd',
+      title: 'Date Ended',
       type: 'dateObject'
     },
     {
-      name: 'endTime',
-      title: 'End Time',
-      type: 'dateObject'
+      name: 'location',
+      title: 'Location',
+      type: 'reference',
+      to: {type: 'location'}
     },
+  ],
+  fieldsets: [
     {
-      name: 'description',
-      title: 'Description',
-      type: 'localeAdvancedBlockContent'
-    },
-    {
-      name: 'image',
-      title: 'Image',
-      type: 'localeImage',
-    },
-    {
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}]
-    },
+      name: 'metadata', 
+      title: 'Metadata',
+      options: {
+        collapsible: true,
+        collapsed: true
+      }
+    }
   ],
   preview: {
     select: {
-      title: 'title.en'
+      title: 'title.en',
+      media: 'mainImage.image'
     }
   }
 }
