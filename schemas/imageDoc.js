@@ -1,4 +1,5 @@
 import { FaImage } from 'react-icons/fa'
+import docMetadata from './docMetadata'
 
 export default {
   name: 'imageDoc',
@@ -9,89 +10,91 @@ export default {
     {
       name: 'title',
       title: 'Title',
-      type: 'string'
+      type: 'localeString',
+      validation: Rule => Rule.required()
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {
-        source: 'title',
-        maxLength: 96
-      }
+        name: 'slug',
+        title: 'Slug',
+        type: 'localeSlug',
+        options: {
+            source: 'title',
+            maxLength: 96,
+            isUnique: input => input
+        },
+        validation: Rule => Rule.required()
     },
     {
-      name: 'image',
+      name: 'file',
       type: 'image',
-      title: 'Image',
+      title: 'Image File',
       options: {
         hotspot: true
       },
       fields: [
         {
-          name: 'creator',
-          title: 'Creator',
-          type: 'string'
-        },
-        {
-          name: 'dateCreated',
-          type: 'datetime',
-          title: 'Date Created',
-        },
-        {
-          name: 'altText',
+          name: 'alt',
           type: 'localeString',
           title: 'Alt Text',
-          validation: Rule => Rule.required()
-        },
-        {
-          name: 'source',
-          type: 'url',
-          title: 'Source URL',
-        },
-        {
-          name: 'licenceTypes',
-          type: 'string',
-          title: 'License Type',
+          validation: Rule => Rule.required(),
           options: {
-            values: [
-              {title: 'Unknown', value: 'NA'},
-              {title: 'Copyright', value: 'C'},
-              {title: 'Public Domain', value: 'PD'},
-              {title: 'Creative Commons Attribution (CC BY)', value: 'CC_BY'},
-              {title: 'Creative Commons Attribution ShareAlike (CC BY-SA)', value: 'CC_BY-SA'},
-              {title: 'Creative Commons Attribution-NoDerivs (CC BY-ND)', value: 'CC_BY-ND'},
-              {title: 'Creative Commons Attribution-NonCommercial (CC BY-NC)', value: 'CC_BY-NC'},
-              {title: 'Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', value: 'CC_BY-NC-SA'},
-              {title: 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', value: 'CC_BY-NC-ND'},
-            ]
+            isHighlighted: true
           }
         },
-        {
-          name: 'permissionGranted',
-          type: 'boolean',
-          title: 'Used with permission',
-        },
-        {
-          name: 'notes',
-          type: 'simpleBlockContent',
-          title: 'Public Notes',
-          description: 'If there are special requirements for attribution from the owner, they can be put here.'
-        },
-        {
-          name: 'notesInternal',
-          type: 'simpleBlockContent',
-          title: 'Internal Notes',
-          description: 'You might want to put details here about how the permission was attained, in case it was ever needed.'
-        },
       ]
+    },
+    {
+      name: 'authors',
+      title: 'Authors',
+      type: 'array',
+      validation: Rule => Rule.unique().error('You can only have one of a person'),
+      of: [{type: 'reference', to: [{type: 'person'}, {type: 'organization'}]}]
+    },
+    {
+      name: 'date',
+      type: 'dateObject',
+      title: 'Date Created',
+    },
+    {
+      name: 'source',
+      type: 'url',
+      title: 'Source URL',
+    },
+    {
+      name: 'license',
+      type: 'string',
+      title: 'License Type',
+      options: {
+        list: [
+          {title: 'Unknown', value: 'NA'},
+          {title: 'Copyright', value: 'C'},
+          {title: 'Public Domain', value: 'PD'},
+          {title: 'Creative Commons Attribution (CC BY)', value: 'CC_BY'},
+          {title: 'Creative Commons Attribution ShareAlike (CC BY-SA)', value: 'CC_BY-SA'},
+          {title: 'Creative Commons Attribution-NoDerivs (CC BY-ND)', value: 'CC_BY-ND'},
+          {title: 'Creative Commons Attribution-NonCommercial (CC BY-NC)', value: 'CC_BY-NC'},
+          {title: 'Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', value: 'CC_BY-NC-SA'},
+          {title: 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', value: 'CC_BY-NC-ND'},
+        ]
+      }
+    },
+    {
+      name: 'permissionGranted',
+      type: 'boolean',
+      title: 'Used with permission',
+    },
+    {
+      name: 'notes',
+      type: 'simpleBlockContent',
+      title: 'Internal Notes',
+      description: 'You might want to put details here about how the permission was attained, in case it was ever needed.'
     }
   ],
 
   preview: {
     select: {
-      title: 'title',
-      media: 'image'
+      title: 'title.en',
+      media: 'file'
     }
   }
 }

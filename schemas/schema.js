@@ -11,7 +11,7 @@ import category from './category'
 import chartBlock from './chartBlock'
 import citationBook from './citationBook'
 import citationNewspaperArticle from './citationNewspaperArticle'
-import citationPublication from './citationPublicationArticle'
+import citationPublicationArticle from './citationPublicationArticle'
 import citationUrl from './citationWebsiteArticle'
 import post from './post'
 import person from './person'
@@ -30,6 +30,7 @@ import mapDocument from './mapDocument'
 import newspaper from './newspaper'
 import newspaperArticle from './newspaperArticle'
 import newspaperArticleObject from './newspaperArticleObject'
+import organization from './organization'
 import publication from './publication'
 import publicationArticle from './publicationArticle'
 import song from './song'
@@ -42,7 +43,6 @@ import event from './event'
 import time from './time'
 import website from './website'
 import websiteArticle from './websiteArticle'
-import citationPublicationArticle from './citationPublicationArticle'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -63,6 +63,7 @@ export default createSchema({
     location,
     newspaper,
     newspaperArticle,
+    organization,
     publication,
     publicationArticle,
     song,

@@ -1,23 +1,23 @@
 export default {
   name: 'imageObject',
   title: 'Image',
-  type: 'image',
+  type: 'object',
   fields: [
-    { name: 'caption',
+    {
+      name: 'imageDoc',
+      title: 'Image Document',
+      type: 'reference', to: {type: 'imageDoc'},
+    },
+    { 
+      name: 'caption',
       type: 'simpleBlockContent',
-      title: 'Caption',
-      options: {
-        isHighlighted: true
-      }
+      title: 'Caption'
     }
   ],
-  options: {
-    hotspot: true
-  },
   preview: {
     select: {
       title: 'caption',
-      media: 'asset'
+      media: 'imageDoc.file'
     }
   }
 }

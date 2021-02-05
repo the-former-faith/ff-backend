@@ -39,7 +39,7 @@ export default {
   preview: {
     select: {
       title: 'title.en',
-      media: 'mainImage.image'
+      media: 'mainImage.file'
     }
   }
 }

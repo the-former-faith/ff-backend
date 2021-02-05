@@ -53,7 +53,7 @@ export default {
     select: {
       title: 'title.en',
       author: 'author.name',
-      media: 'mainImage.image'
+      media: 'mainImage.file'
     },
     prepare(selection) {
       const {author} = selection

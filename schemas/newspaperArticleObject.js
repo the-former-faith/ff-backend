@@ -15,7 +15,7 @@ export default {
   preview: {
     select: {
       title: 'caption',
-      media: 'newspaperArticle.mainImage'
+      media: 'newspaperArticle.mainImage.file'
     }
   }
 }

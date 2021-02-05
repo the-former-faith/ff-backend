@@ -32,10 +32,7 @@ export default [
     {
         name: 'mainImage',
         title: 'Main image',
-        type: 'image',
-        options: {
-            hotspot: true
-        }
+        type: 'reference', to: {type: 'imageDoc'},
     },
     {
         name: 'longDescription',
