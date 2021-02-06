@@ -56,6 +56,11 @@ export default {
       title: 'Date Created',
     },
     {
+      name: 'dateEnd',
+      type: 'dateObject',
+      title: 'Latest Possible Date Created',
+    },
+    {
       name: 'source',
       type: 'url',
       title: 'Source URL',
@@ -90,7 +95,9 @@ export default {
       description: 'You might want to put details here about how the permission was attained, in case it was ever needed.'
     }
   ],
-
+  initialValue: {
+    permissionGranted: false
+  },
   preview: {
     select: {
       title: 'title.en',

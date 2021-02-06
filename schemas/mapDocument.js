@@ -12,23 +12,15 @@ export default {
       title: 'Marker Points',
       name: 'points',
       type: 'array',
-      of: [ {
-        name: 'point',
-        title: 'Point',
-        type: 'object',
-        fields: [
-          {
-            title: 'Title',
-            name: 'title',
-            type: 'string'
-          },
-          {
-            title: 'Location',
-            name: 'location',
-            type: 'geopoint'
-          }
-        ],
-      }]
+      of: [ 
+        {
+          type: 'reference',
+          to: [
+            {type: 'location'},
+            {type: 'event'},
+          ]
+        }
+      ]
     }
   ],
   fieldsets: [

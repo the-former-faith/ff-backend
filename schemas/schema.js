@@ -27,6 +27,7 @@ import localeStringArray from './localeStringArray'
 import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
 import mapDocument from './mapDocument'
+import mapObject from './mapObject'
 import newspaper from './newspaper'
 import newspaperArticle from './newspaperArticle'
 import newspaperArticleObject from './newspaperArticleObject'
@@ -91,6 +92,7 @@ export default createSchema({
     localeImage,
     advancedBlockContent,
     blockQuoteObject,
+    mapObject,
     newspaperArticleObject,
     time
   ])

@@ -27,11 +27,8 @@ export default {
           type: 'newspaperArticleObject'
         },
         {
-          type: 'reference', 
-          to: {
-            type: 'mapDocument'
-          }
-        }
+          type: 'mapObject'
+        },
       ]
   
 }
