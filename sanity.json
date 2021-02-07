@@ -19,7 +19,8 @@
     "@sanity/dashboard",
     "dashboard-widget-netlify",
     "@sanity/production-preview",
-    "media-library"
+    "media-library",
+    "leaflet-input"
   ],
   "parts": [
     {

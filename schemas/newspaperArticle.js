@@ -1,5 +1,4 @@
 import { FaRegFileAlt } from 'react-icons/fa'
-import docMetadata from './docMetadata'
 
 export default {
   name: 'newspaperArticle',
@@ -7,7 +6,55 @@ export default {
   icon: FaRegFileAlt,
   type: 'document',
   fields: [
-    ...docMetadata,
+    {
+      name: 'title',
+      title: 'Title',
+      type: 'localeString',
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'slug',
+      title: 'Slug',
+      type: 'localeSlug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+        isUnique: input => input
+      },
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'subtitle',
+      title: 'Sub Title',
+      type: 'localeString'
+    },
+    {
+      name: 'file',
+      type: 'image',
+      title: 'Image File',
+      options: {
+        hotspot: true
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'localeString',
+          title: 'Alt Text',
+          description: 'Use Newspaper Article, if you do not need to describe an image in the clipping',
+          validation: Rule => Rule.required(),
+          options: {
+            isHighlighted: true
+          }
+        },
+      ]
+    },
+    {
+      name: 'authors',
+      title: 'Authors',
+      type: 'array',
+      validation: Rule => Rule.unique().error('You can only have one of a person'),
+      of: [{type: 'reference', to: [{type: 'person'}, {type: 'organization'}]}]
+    },
     {
       name: 'parent',
       title: 'Newspaper',
@@ -43,7 +90,12 @@ export default {
       name: 'paywall',
       type: 'boolean',
       fieldset: 'source'
-    }
+    },
+    {
+      name: 'content',
+      title: 'Content',
+      type: 'localeAdvancedBlockContent'
+    },
   ],
   fieldsets: [
     {
@@ -64,12 +116,12 @@ export default {
     }
   ],
   initialValue: {
-    paywall: false
+    paywall: false,
   },
   preview: {
     select: {
       title: 'title.en',
-      media: 'mainImage.file'
+      media: 'file'
     },
   }
 }

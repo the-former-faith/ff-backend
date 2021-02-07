@@ -1,5 +1,4 @@
 import { FaImage } from 'react-icons/fa'
-import docMetadata from './docMetadata'
 
 export default {
   name: 'imageDoc',

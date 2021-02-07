@@ -21,7 +21,19 @@ export default {
           ]
         }
       ]
-    }
+    },
+    {
+      name: 'center',
+      title: 'Map Center',
+      type: 'geopoint',
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'zoom',
+      title: 'Zoom Level',
+      type: 'number',
+      validation: Rule => Rule.required()
+    },
   ],
   fieldsets: [
     {
@@ -33,6 +45,9 @@ export default {
       }
     }
   ],
+  initialValue: {
+    zoom: 12
+  },
   preview: {
     select: {
       title: 'title.en',

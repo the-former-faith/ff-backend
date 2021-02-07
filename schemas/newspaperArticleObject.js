@@ -3,7 +3,7 @@ export default {
   title: 'Newspaper Article',
   type: 'object',
   fields: [
-    { name: 'newspaperArticle',
+    { name: 'embed',
       type: 'reference',
       to: [{type: 'newspaperArticle'}]
     },
@@ -15,7 +15,7 @@ export default {
   preview: {
     select: {
       title: 'caption',
-      media: 'newspaperArticle.mainImage.file'
+      media: 'embed.file'
     }
   }
 }
