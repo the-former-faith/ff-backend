@@ -18,8 +18,7 @@ export default {
     {
       name: 'date',
       title: 'Date Published',
-      type: 'dateObject',
-      validation: Rule => Rule.required()
+      type: 'dateObject'
     },
     {
       name: 'url',

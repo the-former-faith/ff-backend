@@ -1,4 +1,5 @@
 import { FaImage } from 'react-icons/fa'
+import FaceTagger from '../components/FaceTagger'
 
 export default {
   name: 'imageDoc',
@@ -40,6 +41,17 @@ export default {
             isHighlighted: true
           }
         },
+        {
+          name: 'rating',
+          title: 'Rating',
+          type: 'number',
+          inputComponent: FaceTagger,
+          options: {
+            range: {min: 0, max: 10, step: 0.2},
+            isHighlighted: true,
+            imageField: 'file'
+          }
+        }
       ]
     },
     {

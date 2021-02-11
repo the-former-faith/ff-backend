@@ -4,7 +4,7 @@ export default {
   type: 'object',
   fields: [
     {
-      name: 'imageDoc',
+      name: 'embed',
       title: 'Image Document',
       type: 'reference', to: {type: 'imageDoc'},
     },
@@ -17,7 +17,7 @@ export default {
   preview: {
     select: {
       title: 'caption',
-      media: 'imageDoc.file'
+      media: 'embed.file'
     }
   }
 }

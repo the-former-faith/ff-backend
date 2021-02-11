@@ -753,7 +753,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.2.0", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.2.0", "@babel/runtime@^7.8.4":
   version "7.12.13"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.12.13.tgz#0a21452352b02542db0ffb928ac2d3ca7cb6d66d"
   dependencies:
@@ -877,9 +877,9 @@
   version "1.1.2"
   resolved "https://registry.npmjs.org/@sanity/asset-utils/-/asset-utils-1.1.2.tgz#d6b4b875bee4189cb56f274a7fb5494174463cb2"
 
-"@sanity/base@2.3.3", "@sanity/base@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/base/-/base-2.3.3.tgz#aed4ccdd38f8ac5ec87574764082381ab1d93fad"
+"@sanity/base@2.3.4", "@sanity/base@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/base/-/base-2.3.4.tgz#ce004275b2addeccdf73dc30c001f624230833ce"
   dependencies:
     "@popperjs/core" "^2.5.4"
     "@reach/auto-id" "^0.10.5"
@@ -913,6 +913,7 @@
     nanoid "^3.1.9"
     observable-callback "^1.0.1"
     oneline "^1.0.3"
+    polished "^4.0.5"
     popper-max-size-modifier "^0.2.0"
     promise-props "^1.0.0"
     raf "^3.4.1"
@@ -1068,11 +1069,11 @@
     "@sanity/generate-help-url" "2.2.6"
     lodash "^4.17.15"
 
-"@sanity/default-layout@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/default-layout/-/default-layout-2.3.3.tgz#9b6818920d36f1853cecbcf344c80eaecf970867"
+"@sanity/default-layout@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/default-layout/-/default-layout-2.3.4.tgz#e207de2294ded9f4b0dd3a55dbae4ef9eb505899"
   dependencies:
-    "@sanity/base" "2.3.3"
+    "@sanity/base" "2.3.4"
     "@sanity/generate-help-url" "2.2.6"
     "@sanity/ui" "^0.33.0"
     "@sanity/util" "2.2.6"
@@ -1092,17 +1093,17 @@
     prop-types "^15.6.0"
     rxjs "^6.5.3"
 
-"@sanity/desk-tool@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/desk-tool/-/desk-tool-2.3.3.tgz#9b40bf11945f2bbfe335c89e8484f5b0b40735af"
+"@sanity/desk-tool@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/desk-tool/-/desk-tool-2.3.4.tgz#4305c599eed39145246b3992419e88fc90aca2a8"
   dependencies:
     "@popperjs/core" "^2.5.4"
     "@reach/auto-id" "^0.10.5"
-    "@sanity/base" "2.3.3"
+    "@sanity/base" "2.3.4"
     "@sanity/data-aspects" "2.2.6"
     "@sanity/diff" "2.2.6"
-    "@sanity/field" "2.3.3"
-    "@sanity/form-builder" "2.3.3"
+    "@sanity/field" "2.3.4"
+    "@sanity/form-builder" "2.3.4"
     "@sanity/generate-help-url" "2.2.6"
     "@sanity/mutator" "2.2.6"
     "@sanity/react-hooks" "2.2.6"
@@ -1158,12 +1159,12 @@
     simple-get "^4.0.0"
     split2 "^3.2.2"
 
-"@sanity/field@2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/field/-/field-2.3.3.tgz#8594a16e50f6a6f5525465484f858734f41895b8"
+"@sanity/field@2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/field/-/field-2.3.4.tgz#f75c04bcee0139e245d2bd823ef618540cf09a8b"
   dependencies:
     "@sanity/asset-utils" "^1.1.2"
-    "@sanity/base" "2.3.3"
+    "@sanity/base" "2.3.4"
     "@sanity/diff" "2.2.6"
     "@sanity/react-hooks" "2.2.6"
     "@sanity/types" "2.2.6"
@@ -1173,11 +1174,11 @@
     sanity-diff-patch "^1.0.9"
     styled-components "^5.2.1"
 
-"@sanity/form-builder@2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/form-builder/-/form-builder-2.3.3.tgz#96be79991b5569923b7de26393d8103cc22fe67e"
+"@sanity/form-builder@2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/form-builder/-/form-builder-2.3.4.tgz#9d4927c3c806109ea715aa13dd41543fdadf0e18"
   dependencies:
-    "@sanity/base" "2.3.3"
+    "@sanity/base" "2.3.4"
     "@sanity/block-tools" "2.2.6"
     "@sanity/generate-help-url" "2.2.6"
     "@sanity/icons" "^1.0.1"
@@ -1218,11 +1219,11 @@
   version "2.2.6"
   resolved "https://registry.npmjs.org/@sanity/generate-help-url/-/generate-help-url-2.2.6.tgz#1673872e2747d1e8aa9406486a80ba6d3e36869d"
 
-"@sanity/google-maps-input@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.npmjs.org/@sanity/google-maps-input/-/google-maps-input-2.3.3.tgz#dd51bc8139c69fb6f968ada4f7aba0d1468e5dc0"
+"@sanity/google-maps-input@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/@sanity/google-maps-input/-/google-maps-input-2.3.4.tgz#8ca1f9dd1c3d1d1e78a6e4f76987057dc7471c83"
   dependencies:
-    "@sanity/field" "2.3.3"
+    "@sanity/field" "2.3.4"
     "@sanity/react-hooks" "2.2.6"
     "@sanity/types" "2.2.6"
     classnames "^2.2.5"
@@ -1528,6 +1529,10 @@
     "@sanity/resolver" "2.2.6"
     "@sanity/util" "2.2.6"
     loader-utils "1.1.0"
+
+"@scarf/scarf@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@scarf/scarf/-/scarf-1.1.0.tgz#b84b4a91cd938a688d36245b7a7db6fbc476a499"
 
 "@terraformer/arcgis@^2.0.7":
   version "2.0.7"
@@ -2046,8 +2051,8 @@ bl@^1.0.0:
     safe-buffer "^5.1.1"
 
 bl@^4.0.3:
-  version "4.0.4"
-  resolved "https://registry.npmjs.org/bl/-/bl-4.0.4.tgz#f4fda39f81a811d0df6368c1ed91dae499d1c900"
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/bl/-/bl-4.1.0.tgz#451535264182bec2fbbc83a62ab98cf11d9f7b3a"
   dependencies:
     buffer "^5.5.0"
     inherits "^2.0.4"
@@ -3293,8 +3298,8 @@ ee-first@1.1.1:
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 electron-to-chromium@^1.3.30, electron-to-chromium@^1.3.649:
-  version "1.3.655"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.655.tgz#e5ccf5c445ca131fea9d0698d08cc9c8ca01fa81"
+  version "1.3.659"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.659.tgz#479eb1a80044ad3664ebd548e7b225fefe06a914"
 
 element-resize-detector@1.1.13:
   version "1.1.13"
@@ -6045,10 +6050,18 @@ pn@^1.1.0:
   resolved "https://registry.npmjs.org/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
 polished@^3.6.5:
-  version "3.6.7"
-  resolved "https://registry.npmjs.org/polished/-/polished-3.6.7.tgz#44cbd0047f3187d83db0c479ef0c7d5583af5fb6"
+  version "3.7.0"
+  resolved "https://registry.npmjs.org/polished/-/polished-3.7.0.tgz#ece3368df30d33082bc8a957aa212d3f98119278"
   dependencies:
-    "@babel/runtime" "^7.9.2"
+    "@babel/runtime" "^7.12.5"
+    "@scarf/scarf" "^1.1.0"
+
+polished@^4.0.5:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/polished/-/polished-4.1.0.tgz#ab80c10e04fdf8795faee723b59577de18d2936b"
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@scarf/scarf" "^1.1.0"
 
 popmotion@^9.1.0:
   version "9.1.0"

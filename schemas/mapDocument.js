@@ -9,6 +9,18 @@ export default {
   fields: [
     ...docMetadata,
     {
+      name: 'center',
+      title: 'Map Center',
+      type: 'geopoint',
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'zoom',
+      title: 'Zoom Level',
+      type: 'number',
+      validation: Rule => Rule.required()
+    },
+    {
       title: 'Marker Points',
       name: 'points',
       type: 'array',
@@ -21,18 +33,6 @@ export default {
           ]
         }
       ]
-    },
-    {
-      name: 'center',
-      title: 'Map Center',
-      type: 'geopoint',
-      validation: Rule => Rule.required()
-    },
-    {
-      name: 'zoom',
-      title: 'Zoom Level',
-      type: 'number',
-      validation: Rule => Rule.required()
     },
   ],
   fieldsets: [
