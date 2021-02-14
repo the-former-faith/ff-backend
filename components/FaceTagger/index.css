@@ -1,0 +1,57 @@
+.image {
+  width: 100%;
+  display: block;
+}
+
+.container {
+  position: relative;
+  overflow: hidden;
+}
+
+.boxwrapper {
+  box-sizing: border-box;
+  position: absolute;
+  width: calc(var(--size) * 100%);
+  border: 2px solid #2276fc;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--y) * 100%);
+  transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px));
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  user-select: none;
+}
+
+.boxlabel {
+  background-color: #2276fc;
+  padding: 0 4px 4px 2px;
+  width: max-content;
+  font-size: 0.6em;
+  margin: 0;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.boxwrapper[data-state^='dragging'] {
+  opacity: 0.8;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.boxwrapper[data-state='idle'] {
+  transition: all 0.3s ease-in-out;
+}
+
+.box {
+  position: relative;
+  height: 0;
+  padding-bottom: 100%;
+}
+
+.resize {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  background-color: gold;
+}

@@ -42,15 +42,61 @@ export default {
           }
         },
         {
-          name: 'rating',
-          title: 'Rating',
-          type: 'number',
+          name: 'faceTags',
+          title: 'Face Tags',
+          type: 'object',
           inputComponent: FaceTagger,
           options: {
-            range: {min: 0, max: 10, step: 0.2},
-            isHighlighted: true,
-            imageField: 'file'
-          }
+            imageField: 'file',
+            isHighlighted: true
+          },
+          fields: [
+            {
+              name: 'faces',
+              type: 'array',
+              of: [{
+                type: 'object',
+                preview: {
+                  select: {
+                    title: 'person.title.en',
+                    media: 'person.mainImage.file',
+                    x: 'x',
+                    y: 'y'
+                  },
+                  prepare(selection) {
+                    const {x,y,title,media} = selection
+                    return {
+                      title: title,
+                      media: media,
+                      subtitle: `x: ${x}, y: ${y}`
+                    }
+                  }
+                },
+                fields: [
+                  {
+                    name: 'person',
+                    type: 'reference', 
+                    to: [{type: 'person'}]
+                  },
+                  {
+                    name: 'x',
+                    type: 'number',
+                    validation: Rule => Rule.required().min(0).max(1)
+                  },
+                  {
+                    name: 'y',
+                    type: 'number',
+                    validation: Rule => Rule.required().min(0).max(1)
+                  },
+                  {
+                    name: 'size',
+                    type: 'number',
+                    validation: Rule => Rule.required().min(0).max(1)
+                  }
+                ]
+              }]
+            }
+          ],
         }
       ]
     },
@@ -107,7 +153,7 @@ export default {
     }
   ],
   initialValue: {
-    permissionGranted: false
+    permissionGranted: false,
   },
   preview: {
     select: {
