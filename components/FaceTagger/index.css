@@ -45,13 +45,3 @@
   height: 0;
   padding-bottom: 100%;
 }
-
-.resize {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  position: absolute;
-  bottom: -10px;
-  right: -10px;
-  background-color: gold;
-}

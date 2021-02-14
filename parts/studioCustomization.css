@@ -1,0 +1,17 @@
+:global([class*='header_root_']) {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+:global([class*='header_mainNav_']) {
+  flex: 1;
+}
+
+:global([class*='header_title_']) {
+  margin: 0 auto 0 0;
+}
+
+:global([class*='header_viewNav_']) {
+  margin: 0;
+}
