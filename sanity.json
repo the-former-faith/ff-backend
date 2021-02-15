@@ -48,8 +48,8 @@
       "path": "./parts/studioCustomization.css"
     },
     {
-      "implements": "part:@sanity/default-layout/lib/navbar/branding/",
-      "path": "./components/Logo"
+      "implements": "part:@sanity/base/brand-logo",
+      "path": "./components/Logo/index.js"
     }
   ]
 }
