@@ -46,6 +46,10 @@
     {
       "implements": "part:@sanity/base/theme/variables/override-style",
       "path": "./parts/studioCustomization.css"
+    },
+    {
+      "implements": "part:@sanity/default-layout/lib/navbar/branding/",
+      "path": "./components/Logo"
     }
   ]
 }
