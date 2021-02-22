@@ -1,9 +1,9 @@
-import { FaFilm } from 'react-icons/fa'
+import { FaImage } from 'react-icons/fa'
 
 export default {
-  name: 'videoDoc',
-  title: 'Video',
-  icon: FaFilm,
+  name: 'audioDoc',
+  title: 'Audio Recording',
+  icon: FaImage,
   type: 'document',
   fields: [
     {
@@ -25,7 +25,7 @@ export default {
     },
     {
       name: 'files',
-      title: 'Video Files',
+      title: 'Audio File',
       type: 'array',
       of: [{
         type: 'file',

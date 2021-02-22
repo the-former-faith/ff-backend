@@ -6,6 +6,7 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 
 // We import object and document schemas
 import simpleBlockContent from './simpleBlockContent'
+import audioDoc from './audioDoc'
 import book from './book'
 import category from './category'
 import chartBlock from './chartBlock'
@@ -20,6 +21,7 @@ import localeString from './localeString'
 import localeSlug from './localeSlug'
 import dateObject from './dateObject'
 import imageObject from './imageObject'
+import audioObject from './audioObject'
 import videoObject from './videoObject'
 import localeSimpleBlockContent from './localeSimpleBlockContent'
 import localeAdvancedBlockContent from './localeAdvancedBlockContent'
@@ -67,6 +69,7 @@ export default createSchema({
     organization,
     publication,
     publicationArticle,
+    audioDoc,
     song,
     website,
     websiteArticle,
@@ -75,6 +78,7 @@ export default createSchema({
     // { type: 'typename' } in other document schemas
     section,
     imageObject,
+    audioObject,
     videoObject,
     simpleBlockContent,
     localeString,

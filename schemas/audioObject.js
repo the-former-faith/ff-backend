@@ -1,14 +1,14 @@
 export default {
-  name: 'videoObject',
+  name: 'audioObject',
   type: 'object',
-  title: 'Video',
+  title: 'Audio',
   fields: [
     {
       name: 'embed',
-      title: 'Image File',
+      title: 'Audio File',
       type: 'reference',
       to: [
-        { type: 'videoDoc' }
+        { type: 'audioDoc' }
       ]
     },
     {
@@ -34,8 +34,7 @@ export default {
   ],
   preview: {
     select: {
-      title: 'imageFile.title',
-      media: 'imageFile.image'
+      title: 'embed.title.en'
     }
   }
 }

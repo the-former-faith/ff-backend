@@ -18,6 +18,9 @@ export default {
           type: 'videoObject'
         },
         {
+          type: 'audioObject'
+        },
+        {
           type: 'blockQuoteObject'
         },
         {
