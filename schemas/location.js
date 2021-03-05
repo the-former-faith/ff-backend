@@ -12,7 +12,26 @@ export default {
       name: 'coordinates',
       title: 'Coordinates',
       type: 'geopoint',
-    }
+    },
+    {
+      name: 'type',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Country', value: 'country'},
+          {title: 'State', value: 'state'},
+          {title: 'County/Region', value: 'region'},
+          {title: 'City', value: 'city'}
+        ]
+      }
+    },
+    {
+      name: 'parent',
+      type: 'reference',
+      to: [
+        {type: 'location'}
+      ]
+    },
   ],
   fieldsets: [
     {
@@ -27,7 +46,8 @@ export default {
   preview: {
     select: {
       title: 'title.en',
-      media: 'mainImage.file'
+      media: 'mainImage.file',
+      subtitle: 'type'
     }
   }
 }

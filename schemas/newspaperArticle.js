@@ -80,7 +80,7 @@ export default {
       validation: Rule => Rule.required()
     },
     {
-      name: 'url',
+      name: 'source',
       title: 'Source URL',
       type: 'url',
       fieldset: 'source'
@@ -121,7 +121,8 @@ export default {
   preview: {
     select: {
       title: 'title.en',
-      media: 'file'
+      media: 'file',
+      subtitle: 'parent.title.en'
     },
   }
 }

@@ -8,13 +8,32 @@ export default {
   fields: [
     {
       name: 'title',
-      title: 'Title',
-      type: 'string',
+      type: 'localeString',
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'slug',
+      title: 'Slug',
+      type: 'localeSlug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+        isUnique: input => input
+      },
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'city',
+      type: 'reference',
+      to: [
+        {type: 'location'}
+      ]
     },
   ],
   preview: {
     select: {
-      title: 'title',
+      title: 'title.en',
+      subtitle: 'city.title.en'
     },
   }
 }
