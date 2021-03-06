@@ -17,6 +17,7 @@ import citationUrl from './citationWebsiteArticle'
 import post from './post'
 import person from './person'
 import section from './section'
+import sermon from './sermon'
 import localeString from './localeString'
 import localeSlug from './localeSlug'
 import dateObject from './dateObject'
@@ -70,6 +71,7 @@ export default createSchema({
     publication,
     publicationArticle,
     audioDoc,
+    sermon,
     song,
     website,
     websiteArticle,
