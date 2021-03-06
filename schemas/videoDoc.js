@@ -29,7 +29,7 @@ export default {
       type: 'array',
       of: [{
         type: 'file',
-        title: 'Audio File'
+        title: 'Video File'
       }]
     },
     {

@@ -1,3 +1,4 @@
+import { object } from 'prop-types'
 import { GiPublicSpeaker } from 'react-icons/gi/'
 import docMetadata from './docMetadata'
 
@@ -8,8 +9,33 @@ export default {
   fields: [
     ...docMetadata,
     {
-      name: 'narration',
-      type: 'file',
+      name: 'narrations',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {
+            type: 'file',
+            name: 'File',
+            title: 'Audio or Video File'
+          },
+          {
+            type: 'string',
+            name: 'lang',
+            title: 'Language',
+            options: {
+              list: ['en','sw']
+            }
+          },
+          {
+            name: 'narrator',
+            type: 'reference',
+            to: [
+              { type: 'person' }
+            ]
+          }
+        ]
+      }]
     },
     {
       name: 'date',
