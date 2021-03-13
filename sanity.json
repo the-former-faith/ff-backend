@@ -40,7 +40,7 @@
       "path": "./parts/resolveProductionUrl.js"
     },
     {
-      "implements": "part:@sanity/form-builder/input/image/asset-source",
+      "implements": "part:@sanity/form-builder/input/asset-source",
       "path": "./parts/assetSource.js"
     },
     {
