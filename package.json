@@ -30,7 +30,7 @@
     "@xstate/react": "^1.2.2",
     "deepmerge": "^3.3.0",
     "is-plain-object": "^2.0.4",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-autocomplete": "^1.8.1",
