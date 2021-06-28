@@ -15,22 +15,22 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/base": "^2.6.0",
-    "@sanity/color-input": "^2.2.6",
+    "@sanity/base": "^2.12.2",
+    "@sanity/color-input": "^2.11.0",
     "@sanity/components": "^2.2.6",
-    "@sanity/core": "^2.6.1",
-    "@sanity/dashboard": "^2.2.6",
-    "@sanity/default-layout": "^2.6.0",
-    "@sanity/default-login": "^2.2.6",
-    "@sanity/desk-tool": "^2.6.1",
-    "@sanity/google-maps-input": "^2.6.0",
-    "@sanity/language-filter": "^2.2.6",
+    "@sanity/core": "^2.12.2",
+    "@sanity/dashboard": "^2.10.5",
+    "@sanity/default-layout": "^2.12.2",
+    "@sanity/default-login": "^2.11.1",
+    "@sanity/desk-tool": "^2.12.2",
+    "@sanity/google-maps-input": "^2.12.2",
+    "@sanity/language-filter": "^2.9.0",
     "@sanity/production-preview": "^2.2.6",
-    "@sanity/vision": "^2.2.6",
+    "@sanity/vision": "^2.11.2",
     "@xstate/react": "^1.2.2",
     "deepmerge": "^3.3.0",
     "is-plain-object": "^2.0.4",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-autocomplete": "^1.8.1",
@@ -43,6 +43,6 @@
     "xstate": "^4.16.2"
   },
   "devDependencies": {
-    "@sanity/cli": "^2.6.0"
+    "@sanity/cli": "^2.12.2"
   }
 }
