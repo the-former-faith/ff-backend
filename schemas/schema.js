@@ -15,6 +15,7 @@ import citationNewspaperArticle from './citationNewspaperArticle'
 import citationPublicationArticle from './citationPublicationArticle'
 import citationUrl from './citationWebsiteArticle'
 import post from './post'
+import postLink from './postLink'
 import person from './person'
 import section from './section'
 import sermon from './sermon'
@@ -58,6 +59,7 @@ export default createSchema({
     // The following are document types which will appear
     // in the studio.
     post,
+    postLink,
     book,
     category,
     imageDoc,
