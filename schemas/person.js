@@ -1,5 +1,6 @@
 import { FaUserAlt } from 'react-icons/fa'
 import docMetadata from './docMetadata'
+import WikidataLookup from '../components/WikidataLookup'
 
 export default {
   name: 'person',
@@ -8,6 +9,12 @@ export default {
   type: 'document',
   fields: [
     ...docMetadata,
+    {
+      name: 'wikidataId',
+      title: 'Wikidata ID',
+      type: 'string',
+      inputComponent: WikidataLookup
+    },
     {
       name: 'givenNames',
       title: 'Given Names',

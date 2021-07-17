@@ -1,3 +1,0 @@
-.customTextInput {
-  composes: textInput from "part:@sanity/base/theme/forms/text-input-style";
-}

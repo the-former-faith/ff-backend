@@ -33,7 +33,6 @@
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
-    "react-autocomplete": "^1.8.1",
     "react-dom": "^16.14.0",
     "react-icons": "^3.11.0",
     "sanity-plugin-dashboard-widget-netlify": "^1.0.1",
