@@ -26,7 +26,7 @@ export default {
       type: 'localeString'
     },
     {
-      name: 'dateOfBirth',
+      name: 'date',
       title: 'Date of Birth',
       type: 'dateObject',
     },

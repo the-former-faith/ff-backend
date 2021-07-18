@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react' 
-import { Autocomplete, Card, Flex, Box, Avatar } from '@sanity/ui'
-import Option from './Option'
+import React, { useState } from 'react' 
+import AutoFill from '../AutoFill'
 import {withDocument} from 'part:@sanity/form-builder'
-import client from 'part:@sanity/base/client'
-import urlBuilder from '@sanity/image-url'
 
-const WikidataLookup = (props, ref) => {
+const WikidataLookup = (props) => {
 
-  // this is called by the form builder whenever this input should receive focus
-  //props.onFocus(() => ref)
+  //console.log(props.document)
+
+  //TODO double the options layers:
+  //There are some options unique to this WikiData field (possibly only instanceOf)
+  //and there are ones that all autofill components need (fields)
 
   const instanceOf = 'Q5'
 
-  const [options, setOptions] = useState([])
-
-  useEffect(() => {    
-    console.log(options)
-  })
-
-  const {type} = props
+  const fields = {
+    'familyName': {
+      key: 'P734',
+      type: 'localeString'
+    }
+  }
 
   const sparqlQuery = (x) => `SELECT ?value ?label ?image ?description WHERE {
     ?value wdt:P31 wd:${instanceOf}.
@@ -35,41 +34,20 @@ const WikidataLookup = (props, ref) => {
   
   const headers = { 'Accept': 'application/sparql-results+json' }
   
-  const fetchEntries = (x) => fetch( fullUrl(x), { headers } ).then( body => body.json() )
-
-  const handleQueryChange = (query) => {
-    if (query && query.length > 2) {
-      fetchEntries(query)
-      .then( x => x.results.bindings.map(i => {
-        return {
-          value: i.value.value.substring(i.value.value.lastIndexOf('/') + 1, i.value.value.length),
-          payload: {
-            description: i.description.value,
-            name: i.label.value,
-            imageUrl: i.image ? i.image.value : null,
-          }
-        }
-      }))
-      .then( x => setOptions(x))
+  const fetchEntries = (x) => fetch( fullUrl(x), { headers } ).then( body => body.json() ).then( x => x.results.bindings.map(i => {
+    return {
+      value: i.value.value.substring(i.value.value.lastIndexOf('/') + 1, i.value.value.length),
+      payload: {
+        description: i.description.value,
+        name: i.label.value,
+        imageUrl: i.image ? i.image.value : null,
+      }
     }
-  }
-
+  }))
 
   return (
-    <>
-      <h2>{type.title}</h2>
-      <Autocomplete
-        fontSize={[2, 2, 3]}
-        id="autocomplete-example"
-        onQueryChange={e => handleQueryChange(e)}
-        onChange={e => console.log(e)}
-        options={options}
-        placeholder="Search options"
-        filterOption={e => e}
-        renderOption={(option) => <Option option={option} />}
-      />
-    </>
+    <AutoFill onQueryChange={fetchEntries} {...props} />
   )
 }
 
-export default WikidataLookup
+export default withDocument(WikidataLookup)
