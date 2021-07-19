@@ -1,11 +1,11 @@
 import React, { useState } from 'react' 
 import { Autocomplete, Grid, Stack, Label, TextInput } from '@sanity/ui'
+import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
 import Option from './Option'
-import client from 'part:@sanity/base/client'
-import urlBuilder from '@sanity/image-url'
 
-const AutoFill = React.forwardRef((props, ref) => {
+
+const AutoFill = (props) => {
 
   //TODO Create 3 props to make re-usable
   //1. Options (object) - contain the fields to be matched with Autocomplete results
@@ -15,6 +15,10 @@ const AutoFill = React.forwardRef((props, ref) => {
   //and this will handle layout, basic function between the 2 inputs, and Sanity patches
 
   const [options, setOptions] = useState([])
+  //This will be set when the text field gains focus
+  //and it will be compared with the value onblur.
+  //The call to API should only change if the value is different.
+  const [initialValue, setInitialValue] = useState(value)
 
   const { 
     type,
@@ -24,9 +28,12 @@ const AutoFill = React.forwardRef((props, ref) => {
     markers,
     presence,
     compareValue,
+    onChange,
     onFocus,
     onBlur, 
     onQueryChange,
+    fetchFillValuesCallback,
+    currentRef
   } = props
 
   //This works! It's so simple!
@@ -38,6 +45,42 @@ const AutoFill = React.forwardRef((props, ref) => {
       .then( x => setOptions(x))
     }
   }
+
+  const handleSelect = (e) => {
+    if(e !== value) {
+      fetchFillValues(e)
+      onChange(PatchEvent.from( set(e) ))
+    }
+  }
+
+  //TODO this is always firing even if nothing changed
+  //so I will have to use my initialValue
+  const handleBlur = React.useCallback(
+    // useCallback will help with performance
+    (event) => {
+      const inputValue = event.currentTarget.value
+      onBlur(fetchFillValues(inputValue))
+    },
+    [onBlur]
+  )
+
+  const handleChange = React.useCallback(
+    // useCallback will help with performance
+    (event) => {
+      const inputValue = event.currentTarget.value // get current value
+      // if the value exists, set the data, if not, unset the data
+      onChange(PatchEvent.from(inputValue ? set(inputValue) : unset()))
+    },
+    [onChange]
+  )
+
+
+  //This will be called both on text input blur
+  //and Autocomplete select
+  const fetchFillValues = (e) => {
+    fetchFillValuesCallback(e)
+  }
+
 
   return (
     <FormField
@@ -53,7 +96,7 @@ const AutoFill = React.forwardRef((props, ref) => {
           <Autocomplete
             fontSize={[2, 2, 3]}
             onQueryChange={e => handleQueryChange(e)}
-            onChange={e => console.log(e)}
+            onChange={e => handleSelect(e)}
             options={options}
             placeholder="Search for ID"
             filterOption={e => e}
@@ -63,18 +106,19 @@ const AutoFill = React.forwardRef((props, ref) => {
         <Stack space={2}>
           <Label>Text</Label>
           <TextInput
+            id="fgfgf666gjjgjhguu8"
             value={value}
             readOnly={readOnly}
             placeholder={placeholder}
             onFocus={onFocus}
-            onBlur={onBlur}
-            ref={ref}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            ref={currentRef}
           />
         </Stack>
       </Grid>
     </FormField>
   )
 }
-)
 
 export default AutoFill

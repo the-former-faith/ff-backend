@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import AutoFill from '../AutoFill'
 import {withDocument} from 'part:@sanity/form-builder'
 
-const WikidataLookup = (props) => {
+const WikidataLookup = React.forwardRef((props, ref) => {
 
   //console.log(props.document)
 
@@ -34,6 +34,7 @@ const WikidataLookup = (props) => {
   
   const headers = { 'Accept': 'application/sparql-results+json' }
   
+  //TODO fix this query, because the results aren't what I'm expecting
   const fetchEntries = (x) => fetch( fullUrl(x), { headers } ).then( body => body.json() ).then( x => x.results.bindings.map(i => {
     return {
       value: i.value.value.substring(i.value.value.lastIndexOf('/') + 1, i.value.value.length),
@@ -45,9 +46,19 @@ const WikidataLookup = (props) => {
     }
   }))
 
+  const fetchValues = (e) => {
+    console.log(e)
+  }
+
   return (
-    <AutoFill onQueryChange={fetchEntries} {...props} />
+    <AutoFill 
+      onQueryChange={fetchEntries} 
+      fetchFillValuesCallback={fetchValues} 
+      currentRef={ref}
+      {...props} 
+    />
   )
 }
+)
 
 export default withDocument(WikidataLookup)
