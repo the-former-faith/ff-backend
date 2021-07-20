@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import { useMachine } from '@xstate/react'
-import { createMachine, assign } from 'xstate'
-import { Autocomplete, Grid, Stack, Label, TextInput } from '@sanity/ui'
+import { Grid, Stack, Label, TextInput } from '@sanity/ui'
 import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
-import Option from './Option'
+import AutocompleteField from './AutocompleteField'
 
 
 const AutoFill = (props) => {
@@ -16,7 +14,6 @@ const AutoFill = (props) => {
   //So all external API calls will be handled by individual instances,
   //and this will handle layout, basic function between the 2 inputs, and Sanity patches
 
-  const [options, setOptions] = useState([])
   //This will be set when the text field gains focus
   //and it will be compared with the value onblur.
   //The call to API should only change if the value is different.
@@ -40,20 +37,6 @@ const AutoFill = (props) => {
 
   //This works! It's so simple!
   //client.patch(props.document._id).set({'familyName.en': 'Money'}).commit()
-
-  const handleQueryChange = (query) => {
-    // if (query && query.length > 2) {
-    //   onQueryChange(query) 
-    //   .then( x => setOptions(x))
-    // }
-  }
-
-  const handleSelect = (e) => {
-    if(e !== value) {
-      fetchFillValues(e)
-      onChange(PatchEvent.from( set(e) ))
-    }
-  }
 
   //TODO this is always firing even if nothing changed
   //so I will have to use my initialValue
@@ -83,39 +66,6 @@ const AutoFill = (props) => {
     fetchFillValuesCallback(e)
   }
 
-  const machine = createMachine({
-    initial: 'idle',
-    states: {
-      idle: {
-        on: {
-          queryChange: { 
-            target: 'typing', 
-          }
-        },
-      },
-      typing: {
-        on: {
-          queryChange: { 
-            target: 'typing', 
-          }
-        },
-        after: {
-          1000: { 
-            actions: handleQueryChange,
-            target: 'loading' 
-          }
-        }
-      },
-      loading: {
-        after: {
-          1000: { target: 'idle' }
-        }
-      },
-    },
-  })
-
-  const [state, send] = useMachine(machine)
-
   return (
     <FormField
       description={type.description}  // Creates description from schema
@@ -128,16 +78,7 @@ const AutoFill = (props) => {
       <Grid columns={2} gap={2} padding={4}>
         <Stack space={2}>
           <Label>Search</Label>
-          <Autocomplete
-            fontSize={[2, 2, 3]}
-            onQueryChange={e => send('queryChange')}
-            onChange={e => handleSelect(e)}
-            options={options}
-            placeholder="Search for ID"
-            filterOption={e => e}
-            renderOption={(option) => <Option option={option} />}
-            loading={state.value === 'loading'}
-          />
+          <AutocompleteField {...props} />
         </Stack>
         <Stack space={2}>
           <Label>Text</Label>
