@@ -1,76 +1,78 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useMachine } from '@xstate/react'
 import { createMachine, assign } from 'xstate'
-import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { Autocomplete } from '@sanity/ui'
 import Option from './Option'
 
 const AutocompleteField = (props) => {
 
-    const { 
-  
-      } = props
-
-    const [options, setOptions] = useState([])
+    const { fetchOptionsCallback } = props
 
     const assignValue = assign({fieldValue: (context, event) => event.value ? event.value : context.fieldValue})
 
-    const handleQueryChange = (query) => {
-        //console.log(state.context)
-        // if (query && query.length > 2) {
-        //   onQueryChange(query) 
-        //   .then( x => setOptions(x))
-        // }
-      }
-    
-      // const handleSelect = (e) => {
-      //   if(e !== value) {
-      //     fetchFillValues(e)
-      //     onChange(PatchEvent.from( set(e) ))
-      //   }
-      // }
+    const assignOptions = assign({options: (context, event) => event.options ? event.options : []})
 
-      const machine = createMachine({
-        initial: 'idle',
-        context: {
-          fieldValue: 'Hmm'
-        },
-        states: {
-          idle: {
-            on: {
-              queryChange: { 
-                actions: [assignValue],
-                target: 'typing', 
-              }
-            },
-          },
-          typing: {
-            on: {
-              queryChange: { 
-                actions: [assignValue],
-                target: 'typing', 
-              }
-            },
-            after: {
-              2000: { 
-                actions: handleQueryChange,
-                target: 'loading' 
-              }
-            }
-          },
-          loading: {
-            on: {
-              queryChange: { 
-                actions: [assignValue, 'cancelRequest'],
-                target: 'typing', 
-              }
-            },
-            after: {
-              5000: { target: 'idle' }
+    //TODO Catch errors and display them (https://www.sanity.io/ui/docs/component/toast)
+    //TODO Set timeout
+    //TODO Create cancel fetch function
+    //(It probably will be best to make it a reusable utillity)
+    const fetchOptions = (query) => {
+      if (query.fieldValue && query.fieldValue.length > 2) {
+        fetchOptionsCallback(query.fieldValue) 
+        .then( x => send({type: 'loaded', options: x}))
+      }
+    }
+    
+    // const handleSelect = (e) => {
+    //   if(e !== value) {
+    //     fetchFillValues(e)
+    //     onChange(PatchEvent.from( set(e) ))
+    //   }
+    // }
+
+    const machine = createMachine({
+      initial: 'idle',
+      context: {
+        fieldValue: '',
+        options: []
+      },
+      states: {
+        idle: {
+          on: {
+            queryChange: { 
+              actions: [assignValue],
+              target: 'typing', 
             }
           },
         },
-      })
+        typing: {
+          on: {
+            queryChange: { 
+              actions: [assignValue],
+              target: 'typing', 
+            }
+          },
+          after: {
+            2000: { 
+              actions: fetchOptions,
+              target: 'loading' 
+            }
+          }
+        },
+        loading: {
+          on: {
+            queryChange: { 
+              actions: [assignValue, 'cancelRequest'],
+              target: 'typing', 
+            },
+            loaded: { 
+              actions: [assignOptions],
+              target: 'idle', 
+            }
+          }
+        },
+      },
+    })
   
     const [state, send] = useMachine(machine)
 
@@ -84,15 +86,13 @@ const AutocompleteField = (props) => {
             //onChange={e => handleSelect(e)}
             onChange={e => console.log('Changed: ', e)}
             onSelect={e => console.log('Selected: ', e)}
-            // onQueryChange={e => console.log('Query Changed: ', e)}
-            options={options}
+            options={state.context.options}
             placeholder="Search for ID"
             filterOption={e => e}
             renderOption={(option) => <Option option={option} />}
             loading={state.value === 'loading'}
             value={state.context.fieldValue}
             renderValue = {(a) => state.context.fieldValue}
-            //value="Monkey"
         />
       </>
     )

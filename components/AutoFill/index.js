@@ -30,7 +30,6 @@ const AutoFill = (props) => {
     onChange,
     onFocus,
     onBlur, 
-    onQueryChange,
     fetchFillValuesCallback,
     currentRef
   } = props

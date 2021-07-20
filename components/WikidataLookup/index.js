@@ -52,7 +52,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
 
   return (
     <AutoFill 
-      onQueryChange={fetchEntries} 
+      fetchOptionsCallback={fetchEntries} 
       fetchFillValuesCallback={fetchValues} 
       currentRef={ref}
       {...props} 
