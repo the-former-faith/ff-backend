@@ -1,4 +1,6 @@
-import React, { useState } from 'react' 
+import React, { useState } from 'react'
+import { useMachine } from '@xstate/react'
+import { createMachine, assign } from 'xstate'
 import { Autocomplete, Grid, Stack, Label, TextInput } from '@sanity/ui'
 import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
@@ -40,10 +42,10 @@ const AutoFill = (props) => {
   //client.patch(props.document._id).set({'familyName.en': 'Money'}).commit()
 
   const handleQueryChange = (query) => {
-    if (query && query.length > 2) {
-      onQueryChange(query) 
-      .then( x => setOptions(x))
-    }
+    // if (query && query.length > 2) {
+    //   onQueryChange(query) 
+    //   .then( x => setOptions(x))
+    // }
   }
 
   const handleSelect = (e) => {
@@ -81,6 +83,38 @@ const AutoFill = (props) => {
     fetchFillValuesCallback(e)
   }
 
+  const machine = createMachine({
+    initial: 'idle',
+    states: {
+      idle: {
+        on: {
+          queryChange: { 
+            target: 'typing', 
+          }
+        },
+      },
+      typing: {
+        on: {
+          queryChange: { 
+            target: 'typing', 
+          }
+        },
+        after: {
+          1000: { 
+            actions: handleQueryChange,
+            target: 'loading' 
+          }
+        }
+      },
+      loading: {
+        after: {
+          1000: { target: 'idle' }
+        }
+      },
+    },
+  })
+
+  const [state, send] = useMachine(machine)
 
   return (
     <FormField
@@ -90,17 +124,19 @@ const AutoFill = (props) => {
       __unstable_presence={presence}  // Handles presence avatars
       compareValue={compareValue}     // Handles "edited" status
     >
+      <p>{state.value}</p>
       <Grid columns={2} gap={2} padding={4}>
         <Stack space={2}>
           <Label>Search</Label>
           <Autocomplete
             fontSize={[2, 2, 3]}
-            onQueryChange={e => handleQueryChange(e)}
+            onQueryChange={e => send('queryChange')}
             onChange={e => handleSelect(e)}
             options={options}
             placeholder="Search for ID"
             filterOption={e => e}
             renderOption={(option) => <Option option={option} />}
+            loading={state.value === 'loading'}
           />
         </Stack>
         <Stack space={2}>

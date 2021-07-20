@@ -1,5 +1,5 @@
 import { useMachine } from '@xstate/react'
-import { createMachine, assign, interpret } from 'xstate'
+import { createMachine, assign } from 'xstate'
 import React, {useEffect} from 'react' 
 import styles from './index.css'
 import BoxLabel from './BoxLabel'
@@ -49,7 +49,7 @@ const Box = (props) => {
     dy: 0,
     px: 0,
     py: 0,
-  });
+  })
   
   const assignDelta = assign({
     dx: (context, event) => {
