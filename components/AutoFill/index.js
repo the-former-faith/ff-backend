@@ -73,7 +73,7 @@ const AutoFill = (props) => {
       __unstable_presence={presence}  // Handles presence avatars
       compareValue={compareValue}     // Handles "edited" status
     >
-      <Grid columns={2} gap={2} padding={4}>
+      <Grid columns={[1, 1, 2, 2]} gap={2} padding={4}>
         <Stack space={2}>
           <Label>Search</Label>
           <AutocompleteField {...props} />
