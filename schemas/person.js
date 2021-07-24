@@ -39,7 +39,7 @@ export default {
       ]
     },
     {
-      name: 'dateOfDeath',
+      name: 'dateEnd',
       title: 'Date of Death',
       type: 'dateObject',
     },

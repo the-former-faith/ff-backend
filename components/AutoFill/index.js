@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Stack, Label, TextInput } from '@sanity/ui'
 import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
+import client from 'part:@sanity/base/client'
 import AutocompleteField from './AutocompleteField'
 
 
@@ -18,6 +19,7 @@ const AutoFill = (props) => {
   //and it will be compared with the value onblur.
   //The call to API should only change if the value is different.
   const [initialValue, setInitialValue] = useState(value)
+  const [secectedOption, setSecectedOption] = useState(null)
 
   const { 
     type,
@@ -30,9 +32,16 @@ const AutoFill = (props) => {
     onChange,
     onFocus,
     onBlur, 
-    fetchFillValuesCallback,
+    fieldsToFill,
     currentRef
   } = props
+
+  //This will be called both on text input blur
+  //and Autocomplete select
+  const handleSelectCallback = async(e) => {
+    const fields = await fieldsToFill(e)
+    client.patch(props.document._id).set(fields).commit()
+  }
 
   //This works! It's so simple!
   //client.patch(props.document._id).set({'familyName.en': 'Money'}).commit()
@@ -43,7 +52,7 @@ const AutoFill = (props) => {
     // useCallback will help with performance
     (event) => {
       const inputValue = event.currentTarget.value
-      onBlur(fetchFillValues(inputValue))
+      //onBlur(fetchFillValues(inputValue))
     },
     [onBlur]
   )
@@ -58,13 +67,6 @@ const AutoFill = (props) => {
     [onChange]
   )
 
-
-  //This will be called both on text input blur
-  //and Autocomplete select
-  const fetchFillValues = (e) => {
-    fetchFillValuesCallback(e)
-  }
-
   return (
     <FormField
       description={type.description}  // Creates description from schema
@@ -76,7 +78,7 @@ const AutoFill = (props) => {
       <Grid columns={[1, 1, 2, 2]} gap={2} padding={4}>
         <Stack space={2}>
           <Label>Search</Label>
-          <AutocompleteField {...props} />
+          <AutocompleteField {...props} handleSelectCallback={handleSelectCallback} />
         </Stack>
         <Stack space={2}>
           <Label>Text</Label>

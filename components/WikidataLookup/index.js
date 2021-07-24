@@ -1,7 +1,13 @@
-import React, { useState } from 'react' 
+import React from 'react' 
 import AutoFill from '../AutoFill'
 import {useToast} from '@sanity/ui'
 import {withDocument} from 'part:@sanity/form-builder'
+import WBK from 'wikibase-sdk'
+
+const wbk = WBK({
+  instance: 'https://www.wikidata.org',
+  sparqlEndpoint: 'https://query.wikidata.org/sparql'
+})
 
 const WikidataLookup = React.forwardRef((props, ref) => {
 
@@ -15,16 +21,44 @@ const WikidataLookup = React.forwardRef((props, ref) => {
 
   const instanceOf = 'Q5'
 
-  const fields = {
-    'familyName': {
-      key: 'P734',
-      type: 'localeString'
+  const headers = { method: 'GET' }
+
+  const fetchEnities = async(ids, props)=> {
+    const url =  wbk.getEntities({
+      ids: ids,
+      languages: [ 'en' ],
+      props: props ? props : ''
+    })
+
+    const headers = { method: 'GET' }
+
+    const entities = await fetch( url, headers ).then( body => body.json() )
+
+    const simplifiedEntities = await wbk.simplify.entities(entities)
+
+    return await simplifiedEntities
+  }
+
+  const getLabels = async(ids) => {
+    const entities = await fetchEnities(ids, ['labels'])
+
+    const entitiesArray = Object.values(entities)
+
+    const enitiesLabels = entitiesArray.map(x => {
+      return x.labels.en
+    })
+
+    return enitiesLabels
+  }
+
+  const fieldsToFill = async(claims) => {
+    return {
+      'familyName.en': (await getLabels(claims.P734)).join(' '),
+      'givenNames.en': await getLabels(claims.P735),
     }
   }
 
   const fullUrl = (x) => `https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&origin=*&search=${encodeURIComponent( x )}&language=en&type=item&props=`
-  
-  const headers = { method: 'GET' }
   
   const fetchEntries = (x) => fetch( fullUrl(x), headers )
     .then( body => body.json() )
@@ -37,7 +71,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     })
     .then(async x => {
       const keys = await x.map(i => i.id)
-      const url = (x) => `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&ids=${x.join('%7C')}&props=claims&languages=en`
+      const url = (x) => `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&ids=${x.join('%7C')}&props=claims%7Creferences%7Clabels&languages=en`
       const getClaims = (x) => fetch( url(x), headers )
       .then( body => body.json() )
       .then(x => {
@@ -48,6 +82,8 @@ const WikidataLookup = React.forwardRef((props, ref) => {
       const claims = await getClaims(keys)
       //Here, do some magic to map the 2 objects together.
       //I think I should use reduce instead of map.
+      const simplifiedEntities = wbk.simplify.entities(claims)
+
       const mappedEntities = (x, y) => x.map(i => {
         return {
           value: i.id,
@@ -55,19 +91,20 @@ const WikidataLookup = React.forwardRef((props, ref) => {
             description: i.description,
             name: i.label,
             names: i.aliases ? [i.label, ...i.aliases] : [i.label],
-            imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].mainsnak.datavalue.value.split(' ').join('_')}` : null,
-            instanceOf: y[i.id].claims?.P31[0].mainsnak.datavalue.value.id,
+            imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].split(' ').join('_')}` : null,
+            instanceOf: y[i.id].claims?.P31[0],
             claims: y[i.id].claims
           }
         }
       })
-      return await mappedEntities(x, claims)
+      return await mappedEntities(x, simplifiedEntities)
     })
     .catch(e => console.log(e.message))
 
   return (
     <AutoFill 
       fetchOptionsCallback={fetchEntries} 
+      fieldsToFill={fieldsToFill}
       currentRef={ref}
       {...props} 
     />

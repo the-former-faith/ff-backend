@@ -6,7 +6,10 @@ import Option from './Option'
 
 const AutocompleteField = (props) => {
 
-    const { fetchOptionsCallback } = props
+    const { 
+      fetchOptionsCallback,
+      handleSelectCallback
+    } = props
 
     const toast = useToast()
 
@@ -37,8 +40,9 @@ const AutocompleteField = (props) => {
       }
     }
     
-    const handleSelect = (c, e) => {
-      console.log(e)
+    const handleSelect = (context, event) => {
+      const option = context.options.find(x => x.value === event.value)
+      handleSelectCallback(option.payload.claims)
     }
 
     const machine = createMachine({
