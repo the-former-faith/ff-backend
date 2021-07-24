@@ -49,41 +49,25 @@ const WikidataLookup = React.forwardRef((props, ref) => {
       //Here, do some magic to map the 2 objects together.
       //I think I should use reduce instead of map.
       const mappedEntities = (x, y) => x.map(i => {
-        console.log(y[i.id].claims.P18)
         return {
-          value: i.label,
+          value: i.id,
           payload: {
             description: i.description,
-            id: i.id,
             name: i.label,
-            imageUrl: y[i.id].claims.P18 ? `https://upload.wikimedia.org/wikipedia/commons/b/b6/${y[i.id].claims.P18[0].mainsnak.datavalue.value.split(' ').join('_')}` : null,
-            //instanceOf: y[i.id].claims?.P31.mainsnak.datavalue.value.id
+            names: i.aliases ? [i.label, ...i.aliases] : [i.label],
+            imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].mainsnak.datavalue.value.split(' ').join('_')}` : null,
+            instanceOf: y[i.id].claims?.P31[0].mainsnak.datavalue.value.id,
+            claims: y[i.id].claims
           }
         }
       })
       return await mappedEntities(x, claims)
     })
-    // .then( x => x.map(i => {
-    //   return {
-    //     value: i.value.value.substring(i.value.value.lastIndexOf('/') + 1, i.value.value.length),
-    //     payload: {
-    //       description: i.description.value,
-    //       name: i.label.value,
-    //       imageUrl: i.image ? i.image.value : null,
-    //     }
-    //   }
-    // }))
-    // .catch(e => console.log(e.message))
-
-
-  const fetchValues = (e) => {
-    console.log(e)
-  }
+    .catch(e => console.log(e.message))
 
   return (
     <AutoFill 
       fetchOptionsCallback={fetchEntries} 
-      fetchFillValuesCallback={fetchValues} 
       currentRef={ref}
       {...props} 
     />

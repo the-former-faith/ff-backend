@@ -19,6 +19,12 @@ const AutocompleteField = (props) => {
       status: 'error',
     })
 
+    const filterResults = (q, i) => {
+      //TODO fix filter to actually filter out names.
+      //Then, I can combine arrays from fetch results instead of replacing them.
+      return i.payload.instanceOf === 'Q5'
+    }
+
     //TODO Catch errors and display them (https://www.sanity.io/ui/docs/component/toast)
     //TODO Set timeout
     //TODO Create cancel fetch function
@@ -31,12 +37,9 @@ const AutocompleteField = (props) => {
       }
     }
     
-    // const handleSelect = (e) => {
-    //   if(e !== value) {
-    //     fetchFillValues(e)
-    //     onChange(PatchEvent.from( set(e) ))
-    //   }
-    // }
+    const handleSelect = (c, e) => {
+      console.log(e)
+    }
 
     const machine = createMachine({
       initial: 'idle',
@@ -50,6 +53,10 @@ const AutocompleteField = (props) => {
             queryChange: { 
               actions: [assignValue],
               target: 'typing', 
+            },
+            select: { 
+              actions: [handleSelect],
+              target: 'idle', 
             }
           },
         },
@@ -96,16 +103,14 @@ const AutocompleteField = (props) => {
         <Autocomplete
             fontSize={[2, 2, 3]}
             onQueryChange={e => send({type: 'queryChange', value: e})}
-            //onQueryChange={e => console.log('Query Changed: ', e)}
-            //onChange={e => handleSelect(e)}
-            onChange={e => console.log('Changed: ', e)}
-            onSelect={e => console.log('Selected: ', e)}
+            onSelect={e => send({type: 'select', value: e})}
             options={state.context.options}
             placeholder="Search for ID"
             renderOption={(option) => <Option option={option} />}
             loading={state.value === 'loading'}
             value={state.context.fieldValue}
             renderValue = {(a) => state.context.fieldValue}
+            filterOption = {(q, i)  => filterResults(q, i)}
         />
       </>
     )
