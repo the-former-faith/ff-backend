@@ -13,17 +13,19 @@ const WikidataLookup = React.forwardRef((props, ref) => {
 
   const toast = useToast()
 
-  //console.log(props.document)
-
   //TODO double the options layers:
   //There are some options unique to this WikiData field (possibly only instanceOf)
   //and there are ones that all autofill components need (fields)
 
+  //TODO use this in the actual filter.
+  //I probably need to move the filter function here from Autocomplete field,
+  //and pass it as a prop
   const instanceOf = 'Q5'
 
   const headers = { method: 'GET' }
 
   const fetchEnities = async(ids, props)=> {
+
     const url =  wbk.getEntities({
       ids: ids,
       languages: [ 'en' ],
@@ -37,9 +39,13 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     const simplifiedEntities = await wbk.simplify.entities(entities)
 
     return await simplifiedEntities
+
   }
 
   const getLabels = async(ids) => {
+
+    if (!ids) return ['']
+
     const entities = await fetchEnities(ids, ['labels'])
 
     const entitiesArray = Object.values(entities)
@@ -49,67 +55,89 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     })
 
     return enitiesLabels
+
   }
 
-  const fieldsToFill = async(claims) => {
+  const fieldsToFill = async(entity) => {
+
+    const claims = entity.payload.claims
+
     return {
+      'title.en': entity.payload.name,
+      'slug.en.current': entity.payload.name.toLowerCase().split(' ').join('-'),
       'familyName.en': (await getLabels(claims.P734)).join(' '),
       'givenNames.en': await getLabels(claims.P735),
+      'date.time': claims.P569 ? claims.P569[0] : undefined,
+      'dateEnd.time': claims.P570 ? claims.P570[0] : '2000-01-02',
+      'wikipediaId': entity.payload.wikipediaId
     }
+
   }
 
-  const fullUrl = (x) => `https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&origin=*&search=${encodeURIComponent( x )}&language=en&type=item&props=`
-  
-  const fetchEntries = (x) => fetch( fullUrl(x), headers )
-    .then( body => body.json() )
-    .then( x => {
-      if (x.search.length > 0) {
-        return x.search
-      } else {
-        toast.push({title: 'No results'})
+  const searchEnities = async(searchTerm, props)=> {
+
+    const url =  wbk.searchEntities({
+      search: searchTerm,
+      language: [ 'en' ],
+      props: props ? props : ''
+    })
+
+    const headers = { method: 'GET' }
+
+    const entities = await fetch( url, headers ).then( body => body.json() )
+
+    if (entities.success === 1 ) {
+      return entities.search
+    }
+
+    //TODO add error catch if no results
+
+  }  
+
+  const mapEntitiesWithClaims = async(x) => {
+
+    const ids = await x.map(i => i.id)
+
+    const entitiesWithClaims = await fetchEnities(ids, ['claims', 'sitelinks'])
+
+    const mappedEntities = (x, y) => x.map(i => {
+      return {
+        value: i.id,
+        payload: {
+          description: i.description,
+          name: i.label,
+          names: i.aliases ? [i.label, ...i.aliases] : [i.label],
+          imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].split(' ').join('_')}` : null,
+          wikipediaId: y[i.id].sitelinks.enwiki ? y[i.id].sitelinks.enwiki : undefined,
+          instanceOf: y[i.id].claims.P31 ? y[i.id].claims.P31[0] : null,
+          claims: y[i.id].claims
+        }
       }
     })
-    .then(async x => {
-      const keys = await x.map(i => i.id)
-      const url = (x) => `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&ids=${x.join('%7C')}&props=claims%7Creferences%7Clabels&languages=en`
-      const getClaims = (x) => fetch( url(x), headers )
-      .then( body => body.json() )
-      .then(x => {
-        if(x.success == 1) {
-          return x.entities
-        }
-      })
-      const claims = await getClaims(keys)
-      //Here, do some magic to map the 2 objects together.
-      //I think I should use reduce instead of map.
-      const simplifiedEntities = wbk.simplify.entities(claims)
 
-      const mappedEntities = (x, y) => x.map(i => {
-        return {
-          value: i.id,
-          payload: {
-            description: i.description,
-            name: i.label,
-            names: i.aliases ? [i.label, ...i.aliases] : [i.label],
-            imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].split(' ').join('_')}` : null,
-            instanceOf: y[i.id].claims?.P31[0],
-            claims: y[i.id].claims
-          }
-        }
-      })
-      return await mappedEntities(x, simplifiedEntities)
-    })
-    .catch(e => console.log(e.message))
+    return await mappedEntities(x, entitiesWithClaims)
+  }
+
+  //I Can make this async instead of chaining.
+  const fetchEntriesFromSearchTerm = async(x) => {
+
+    const entriesFromSearchTerm = await searchEnities(x)
+
+    const mappedEntities = await mapEntitiesWithClaims(entriesFromSearchTerm)
+
+    return mappedEntities
+
+  }
 
   return (
     <AutoFill 
-      fetchOptionsCallback={fetchEntries} 
+      fetchOptionsCallback={fetchEntriesFromSearchTerm} 
       fieldsToFill={fieldsToFill}
       currentRef={ref}
       {...props} 
     />
   )
-}
-)
+  
+})
 
 export default withDocument(WikidataLookup)

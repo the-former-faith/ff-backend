@@ -44,6 +44,11 @@ export default {
       type: 'dateObject',
     },
     {
+      name: 'wikipediaId',
+      title: 'Wikipedia ID',
+      type: 'string',
+    },
+    {
       name: 'placeOfDeath',
       title: 'Place of Death',
       type: 'reference',

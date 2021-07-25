@@ -30,6 +30,7 @@ import localeAdvancedBlockContent from './localeAdvancedBlockContent'
 import localeStringArray from './localeStringArray'
 import localeBlurb from './localeBlurb'
 import localeImage from './localeImage'
+import localeUrl from './localeUrl'
 import mapDocument from './mapDocument'
 import mapObject from './mapObject'
 import newspaper from './newspaper'
@@ -98,6 +99,7 @@ export default createSchema({
     localeStringArray,
     localeBlurb,
     localeImage,
+    localeUrl,
     advancedBlockContent,
     blockQuoteObject,
     mapObject,

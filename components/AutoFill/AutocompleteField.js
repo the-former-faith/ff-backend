@@ -29,20 +29,19 @@ const AutocompleteField = (props) => {
     }
 
     //TODO Catch errors and display them (https://www.sanity.io/ui/docs/component/toast)
-    //TODO Set timeout
     //TODO Create cancel fetch function
     //(It probably will be best to make it a reusable utillity)
-    const fetchOptions = (query) => {
+    const fetchOptions = async(query) => {
       if (query.fieldValue && query.fieldValue.length > 2) {
-        fetchOptionsCallback(query.fieldValue) 
-        .then( x => send({type: 'loaded', options: x}))
-        //.then( x => console.log(x))
+        const options = await fetchOptionsCallback(query.fieldValue) 
+        
+        send({type: 'loaded', options: options})
       }
     }
     
     const handleSelect = (context, event) => {
       const option = context.options.find(x => x.value === event.value)
-      handleSelectCallback(option.payload.claims)
+      handleSelectCallback(option)
     }
 
     const machine = createMachine({
@@ -54,14 +53,14 @@ const AutocompleteField = (props) => {
       states: {
         idle: {
           on: {
+            select: { 
+              actions: [handleSelect],
+              target: 'idle', 
+            },
             queryChange: { 
               actions: [assignValue],
               target: 'typing', 
             },
-            select: { 
-              actions: [handleSelect],
-              target: 'idle', 
-            }
           },
         },
         typing: {
@@ -101,22 +100,22 @@ const AutocompleteField = (props) => {
   
     const [state, send] = useMachine(machine)
 
+    //TODO it is sending a queryChange even on blur,
+    //even though the content doesn't change.
+    //Change the event handler to only send Xstate change event is value changed.
     return (
-      <>
-        <p>{state.value}</p>
-        <Autocomplete
-            fontSize={[2, 2, 3]}
-            onQueryChange={e => send({type: 'queryChange', value: e})}
-            onSelect={e => send({type: 'select', value: e})}
-            options={state.context.options}
-            placeholder="Search for ID"
-            renderOption={(option) => <Option option={option} />}
-            loading={state.value === 'loading'}
-            value={state.context.fieldValue}
-            renderValue = {(a) => state.context.fieldValue}
-            filterOption = {(q, i)  => filterResults(q, i)}
-        />
-      </>
+      <Autocomplete
+          fontSize={[2, 2, 3]}
+          onQueryChange={e => send({type: 'queryChange', value: e})}
+          onSelect={e => send({type: 'select', value: e})}
+          options={state.context.options}
+          placeholder="Search for ID"
+          renderOption={(option) => <Option option={option} />}
+          loading={state.value === 'loading'}
+          value={state.context.fieldValue}
+          renderValue = {(a) => state.context.fieldValue}
+          filterOption = {(q, i)  => filterResults(q, i)}
+      />
     )
 }
 
