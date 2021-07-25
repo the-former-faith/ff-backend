@@ -9282,6 +9282,11 @@
     "is-plain-object" "^3.0.0"
     "tiny-warning" "^1.0.3"
 
+"slugify@^1.6.0":
+  "integrity" "sha512-FkMq+MQc5hzYgM86nLuHI98Acwi3p4wX+a5BO9Hhw4JdK4L7WueIiZ4tXEobImPqBz2sVcV0+Mu3GRB30IGang=="
+  "resolved" "https://registry.npmjs.org/slugify/-/slugify-1.6.0.tgz"
+  "version" "1.6.0"
+
 "snapdragon-node@^2.0.1":
   "integrity" "sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw=="
   "resolved" "https://registry.npmjs.org/snapdragon-node/-/snapdragon-node-2.1.1.tgz"

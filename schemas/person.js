@@ -76,13 +76,7 @@ export default {
     select: {
       title: 'title.en',
       media: 'mainImage.file',
+      subtitle: 'shortDescription.en',
     },
-    prepare(selection) {
-      const { title, media} = selection
-      return {
-        title: title,
-        media: media,
-      }
-    }
   }
 }

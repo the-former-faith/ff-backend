@@ -54,10 +54,10 @@ const AutoFill = (props) => {
   )
 
   const handleChange = React.useCallback(
-    // useCallback will help with performance
+
     (event) => {
-      const inputValue = event.currentTarget.value // get current value
-      // if the value exists, set the data, if not, unset the data
+      const inputValue = event.currentTarget.value
+
       onChange(PatchEvent.from(inputValue ? set(inputValue) : unset()))
     },
     [onChange]

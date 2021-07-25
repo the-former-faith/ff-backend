@@ -9,9 +9,34 @@ const wbk = WBK({
   sparqlEndpoint: 'https://query.wikidata.org/sparql'
 })
 
-const WikidataLookup = React.forwardRef((props, ref) => {
+const slugify = (text) => {
+  const from = 'ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;'
+  const to = 'aaaaaeeeeeiiiiooooouuuunc------'
 
-  console.log(props.document)
+  const newText = Array.from(text)
+    .map((c) => {
+      const index = [...from].indexOf(c)
+      if (index > -1) {
+        return c.replace(
+          new RegExp(from.charAt(index), 'g'),
+          to.charAt(index)
+        )
+      }
+      return c
+    })
+    .join('')
+
+  return newText
+    .toString()                     // Cast to string
+    .toLowerCase()                  // Convert the string to lowercase letters
+    .trim()                         // Remove whitespace from both sides of a string
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/&/g, '-y-')           // Replace & with 'and'
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-');   
+}
+
+const WikidataLookup = React.forwardRef((props, ref) => {
 
   const toast = useToast()
 
@@ -66,8 +91,8 @@ const WikidataLookup = React.forwardRef((props, ref) => {
 
     return {
       'title.en': entity.payload.name,
-      'slug.en.current': entity.payload.name.toLowerCase().split(' ').join('-'),
-      'shortDescription.en': entity.payload.name,
+      'slug.en.current': slugify(entity.payload.name),
+      'shortDescription.en': entity.payload.description,
       'familyName.en': (await getLabels(claims.P734)).join(' '),
       'givenNames.en': await getLabels(claims.P735),
       'date.time': claims.P569 ? claims.P569[0] : undefined,

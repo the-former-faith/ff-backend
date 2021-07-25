@@ -39,6 +39,7 @@
     "sanity-plugin-leaflet-input": "^1.0.1",
     "sanity-plugin-media-library": "^1.0.5",
     "save": "^2.4.0",
+    "slugify": "^1.6.0",
     "wikibase-sdk": "^7.13.0",
     "xstate": "^4.23.0"
   },
