@@ -75,13 +75,13 @@ export default {
   preview: {
     select: {
       title: 'title.en',
-      media: 'mainImage.file'
+      media: 'mainImage.file',
     },
     prepare(selection) {
-      const { title, media } = selection
+      const { title, media} = selection
       return {
         title: title,
-        media: media
+        media: media,
       }
     }
   }

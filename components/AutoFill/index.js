@@ -5,7 +5,6 @@ import { FormField } from '@sanity/base/components'
 import client from 'part:@sanity/base/client'
 import AutocompleteField from './AutocompleteField'
 
-
 const AutoFill = (props) => {
 
   //TODO Create 3 props to make re-usable
@@ -15,11 +14,7 @@ const AutoFill = (props) => {
   //So all external API calls will be handled by individual instances,
   //and this will handle layout, basic function between the 2 inputs, and Sanity patches
 
-  //This will be set when the text field gains focus
-  //and it will be compared with the value onblur.
-  //The call to API should only change if the value is different.
-  const [initialValue, setInitialValue] = useState(value)
-  const [secectedOption, setSecectedOption] = useState(null)
+  const [selectedOption, setSelectedOption] = useState(null)
 
   const { 
     type,
@@ -36,18 +31,19 @@ const AutoFill = (props) => {
     currentRef
   } = props
 
-  //This will be called both on text input blur
-  //and Autocomplete select
   const handleSelectCallback = async(e) => {
+    onChange( PatchEvent.from(e.value ? set(e.value) : unset()) )
     const fields = await fieldsToFill(e)
-    client.patch(props.document._id).set(fields).commit()
+    setSelectedOption(fields)
   }
 
-  //This works! It's so simple!
-  //client.patch(props.document._id).set({'familyName.en': 'Money'}).commit()
+  useEffect(() => {
+    if(value && selectedOption){
+      client.patch(props.document._id).set(selectedOption).commit()
+    }
+  }, [selectedOption, value])
 
-  //TODO this is always firing even if nothing changed
-  //so I will have to use my initialValue
+  //TODO set up autofill on blur
   const handleBlur = React.useCallback(
     // useCallback will help with performance
     (event) => {

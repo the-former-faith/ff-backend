@@ -11,6 +11,8 @@ const wbk = WBK({
 
 const WikidataLookup = React.forwardRef((props, ref) => {
 
+  console.log(props.document)
+
   const toast = useToast()
 
   //TODO double the options layers:
@@ -65,6 +67,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     return {
       'title.en': entity.payload.name,
       'slug.en.current': entity.payload.name.toLowerCase().split(' ').join('-'),
+      'shortDescription.en': entity.payload.name,
       'familyName.en': (await getLabels(claims.P734)).join(' '),
       'givenNames.en': await getLabels(claims.P735),
       'date.time': claims.P569 ? claims.P569[0] : undefined,
@@ -137,7 +140,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
       {...props} 
     />
   )
-  
+
 })
 
 export default withDocument(WikidataLookup)
