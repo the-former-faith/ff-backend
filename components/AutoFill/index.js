@@ -4,6 +4,7 @@ import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
 import client from 'part:@sanity/base/client'
 import AutocompleteField from './AutocompleteField'
+import {useDocumentOperation} from '@sanity/react-hooks'
 
 const AutoFill = (props) => {
 
