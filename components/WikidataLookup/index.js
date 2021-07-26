@@ -3,6 +3,7 @@ import AutoFill from '../AutoFill'
 import {useToast} from '@sanity/ui'
 import {withDocument} from 'part:@sanity/form-builder'
 import WBK from 'wikibase-sdk'
+import fetchWikiCommonsImage from './fetchWikiCommonsImage'
 
 const wbk = WBK({
   instance: 'https://www.wikidata.org',
@@ -48,8 +49,6 @@ const WikidataLookup = React.forwardRef((props, ref) => {
   //I probably need to move the filter function here from Autocomplete field,
   //and pass it as a prop
   const instanceOf = 'Q5'
-
-  const headers = { method: 'GET' }
 
   const fetchEnities = async(ids, props)=> {
 
@@ -156,6 +155,10 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     return mappedEntities
 
   }
+
+  const testImage = "Dwight Lyman Moody c.1900.jpg"
+
+  fetchWikiCommonsImage(testImage)
 
   return (
     <AutoFill 

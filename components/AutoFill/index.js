@@ -40,7 +40,7 @@ const AutoFill = (props) => {
 
   useEffect(() => {
     if(value && selectedOption){
-      client.patch(props.document._id).set(selectedOption).commit()
+      client.patch(props.document._id).setIfMissing(selectedOption).commit()
     }
   }, [selectedOption, value])
 
@@ -72,7 +72,7 @@ const AutoFill = (props) => {
       __unstable_presence={presence}  // Handles presence avatars
       compareValue={compareValue}     // Handles "edited" status
     >
-      <Grid columns={[1, 1, 2, 2]} gap={2} padding={4}>
+      <Grid columns={[1, 1, 2, 2]} gap={2} >
         <Stack space={2}>
           <Label>Search</Label>
           <AutocompleteField {...props} handleSelectCallback={handleSelectCallback} />
