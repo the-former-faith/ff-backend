@@ -20,7 +20,8 @@
     "dashboard-widget-netlify",
     "@sanity/production-preview",
     "media-library",
-    "leaflet-input"
+    "leaflet-input",
+    "autocomplete-tags"
   ],
   "parts": [
     {

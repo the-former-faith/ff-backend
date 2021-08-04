@@ -9,10 +9,14 @@ export default {
   fields: [
     ...docMetadata,
     {
+      name: 'linkHymnary',
+      title: 'hymnary.org ULR',
+      type: 'url',
+    },
+    {
       name: 'date',
       title: 'Date Published',
       type: 'dateObject',
-      validation: Rule => Rule.required()
     },
   ],
   fieldsets: [

@@ -105,7 +105,17 @@ export default {
       title: 'Authors',
       type: 'array',
       validation: Rule => Rule.unique().error('You can only have one of a person'),
-      of: [{type: 'reference', to: [{type: 'person'}, {type: 'organization'}]}]
+      of: [
+        {type: 'reference', 
+          to: [{type: 'person'}, {type: 'organization'}]
+        }, 
+        {
+          type: 'object',
+          fields: [
+            {name: 'title', type: 'localeString'}
+          ]
+        }
+      ]
     },
     {
       name: 'date',
@@ -116,6 +126,11 @@ export default {
       name: 'dateEnd',
       type: 'dateObject',
       title: 'Latest Possible Date Created',
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'tags',
     },
     {
       name: 'source',

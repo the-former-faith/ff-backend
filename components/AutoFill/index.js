@@ -4,7 +4,9 @@ import PatchEvent, {set, unset} from '@sanity/form-builder/PatchEvent'
 import { FormField } from '@sanity/base/components'
 import client from 'part:@sanity/base/client'
 import AutocompleteField from './AutocompleteField'
-import {useDocumentOperation} from '@sanity/react-hooks'
+
+//Delete
+import * as chrono from 'chrono-node'
 
 const AutoFill = (props) => {
 
@@ -64,6 +66,20 @@ const AutoFill = (props) => {
     [onChange]
   )
 
+  //Delete this after testing
+  const [myDate, setMyDate] = useState('')
+  const [parsedDate, setParsedDate] = useState('')
+  const handleDateBlur = () => {
+    //1. check for circa
+    //2. remove difficult characters
+    //3. check if chrono can find date
+    //4. check for year only
+    //5. set precision (different for chrono and year-only)
+    const results = chrono.parse(myDate)
+    //console.log(results[0].start.isCertain('year'))
+    //console.log(results[0].start.isCertain('day'))
+  } 
+
   return (
     <FormField
       description={type.description}  // Creates description from schema
@@ -73,6 +89,8 @@ const AutoFill = (props) => {
       compareValue={compareValue}     // Handles "edited" status
     >
       <Grid columns={[1, 1, 2, 2]} gap={2} >
+        <p>{}</p>
+        <input value={myDate} onChange={e => setMyDate(e.target.value)} onBlur={() => handleDateBlur()} />
         <Stack space={2}>
           <Label>Search</Label>
           <AutocompleteField {...props} handleSelectCallback={handleSelectCallback} />

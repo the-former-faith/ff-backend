@@ -7,7 +7,8 @@ import {
   FaEllipsisH, 
   FaQuoteLeft, 
   FaMapMarkerAlt, 
-  FaRegCalendarAlt } from 'react-icons/fa'
+  FaRegCalendarAlt,
+  FaItunesNote } from 'react-icons/fa'
 
 import { ImPageBreak } from 'react-icons/im'
 
@@ -148,6 +149,10 @@ export default [
       {
         name: 'verse',
         type: 'number',
+      },
+      {
+        name: 'verseEnd',
+        type: 'number',
       }
     ]
   },
@@ -195,6 +200,23 @@ export default [
         type: 'reference',
         to: [
           { type: 'location' }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'songLink',
+    type: 'object',
+    title: 'Song link',
+    blockEditor: {
+      icon: FaItunesNote
+    },
+    fields: [
+      {
+        name: 'reference',
+        type: 'reference',
+        to: [
+          { type: 'song' }
         ]
       }
     ]

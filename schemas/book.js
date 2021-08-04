@@ -8,6 +8,11 @@ export default {
   type: 'document',
   fields: [
     ...docMetadata,
+    {
+      name: 'date',
+      title: 'Date Published',
+      type: 'dateObject',
+    },
   ],
   fieldsets: [
     {
