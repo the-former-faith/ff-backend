@@ -145,7 +145,7 @@ const postImageDocToSanity = async(options) => {
 
 const fetchWikiCommonsImage = async(name) => {
 
-  console.log(parseDate('June 15, 1902'))
+  parseDate('June 15, 1902')
 
   //Used for testing only
   const imageRef = {
