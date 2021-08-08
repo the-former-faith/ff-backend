@@ -25,12 +25,13 @@ const fetchSanityImageRef = async (name) => {
       
   const imageRef = await client.assets.upload('image', imageFile.blob())
   
-  console.log(imageRef)
+  return imageRef
 }
 
 const postImageDocToSanity = async(options) => {
 
   const {imageRef, imageMetaData} = options
+  parseDate('June 15, 1902')
 
   const testMeta = { //imageMetaData.query.pages[id (first item?)].imageinfo[0].extmetadata
     "DateTime": {
@@ -143,12 +144,11 @@ const postImageDocToSanity = async(options) => {
   return docRef
 }
 
-const fetchWikiCommonsImage = async(name) => {
+const fetchWikiCommonsImage = async(fileName) => {
 
-  parseDate('June 15, 1902')
-
+  //const sanityImageRef = fetchSanityImageRef(fileName)
   //Used for testing only
-  const imageRef = {
+  const sanityImageRef = {
     "_createdAt": "2021-07-26T13:11:00Z",
     "_id": "image-8d21021ae5732254310eeb4ad3fcccccb365fb99-382x510-jpg",
     "_rev": "NBukuEP541RDcIrdO6t4p1",
@@ -176,11 +176,16 @@ const fetchWikiCommonsImage = async(name) => {
     "uploadId": "wGYtySedzGCuuJIQAFdScFvIFRDIyO18",
     "url": "https://cdn.sanity.io/images/tuiw9zvo/production/8d21021ae5732254310eeb4ad3fcccccb365fb99-382x510.jpg"
   }
+  const wikimediaImageMetaData = fetchImageMetaData(fileName) 
+
+  const imageDocRef = postImageDocToSanity({imageRef: sanityImageRef, imageMetaData: wikimediaImageMetaData})
 
   //The API call to upload the image to sanity and the one to get metadata from WMC 
   //can happen at the same time.
   //Maybe I can use Promise.all?
-  //let values = await Promise.all([coffee, tea, description]);
+  //let values = await Promise.all([coffee, tea, description])
+
+  return imageDocRef
 }
 
 export default fetchWikiCommonsImage
