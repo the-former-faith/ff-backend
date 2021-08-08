@@ -64,6 +64,7 @@ const checkForSplit = (date) => {
 
     if (splitValue) {
         date.dateStart.value = splitValue[0]
+        date.dateStart.isCirca = true
         date.dateEnd = { value: splitValue[1], isCirca: true,  precision: 0 }
     }
 
@@ -100,7 +101,12 @@ const runChrono = async(o) => {
     return o
 } 
 
-// {title: 'Year', value: 9}
+const objectMap = (object, mapFn) => {
+    return Object.keys(object).reduce(function(result, key) {
+      result[key] = mapFn(object[key])
+      return result
+    }, {})
+}
 
 const parseDate = async(dateString) => {
 
@@ -111,9 +117,11 @@ const parseDate = async(dateString) => {
     const splitDate = checkForSplit(cleanedDate)
 
     //For now I'm just running on start date, but will have to change to check both
-    const chronoDate = runChrono(splitDate.dateStart)
+    const runChronoOnBothDates = objectMap(splitDate, async(x) => {
+        return await runChrono(x)
+    })
     
-    return chronoDate
+    return runChronoOnBothDates
     //return { date: {time: date, isCirca: boolean, precision: number},  dateEnd: {time: date, isCirca: boolean, precision: number} }
 
 }
