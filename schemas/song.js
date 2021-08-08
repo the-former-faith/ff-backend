@@ -9,9 +9,36 @@ export default {
   fields: [
     ...docMetadata,
     {
-      name: 'linkHymnary',
-      title: 'hymnary.org ULR',
-      type: 'url',
+      name: 'links',
+      title: 'Links',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {
+            name: 'title',
+            type: 'string',
+            title: 'Site Title',
+            options: {
+              list: [
+                {title: 'Hymnary.org', value: 'hymnary.org'},
+              ]
+            }
+          },
+          {
+            name: 'url',
+            type: 'url',
+            title: 'URL',
+          },
+        ]
+      }]
+    },
+    {
+      name: 'tunes',
+      title: 'Tunes',
+      type: 'array',
+      validation: Rule => Rule.unique().error('You can only link to the same song once'),
+      of: [{type: 'reference', to: {type: 'song'}}],
     },
     {
       name: 'date',

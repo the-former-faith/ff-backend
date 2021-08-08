@@ -37,7 +37,9 @@ export default [
         name: 'reference',
         type: 'reference',
         to: [
-          { type: 'post' }
+          { type: 'post' },
+          { type: 'organization' },
+          { type: 'newspaperArticle' }
           // other types you may want to link to
         ]
       }

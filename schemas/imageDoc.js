@@ -29,7 +29,8 @@ export default {
       type: 'image',
       title: 'Image File',
       options: {
-        hotspot: true
+        hotspot: true,
+        storeOriginalFilename: false
       },
       fields: [
         {

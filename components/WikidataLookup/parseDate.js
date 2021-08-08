@@ -72,12 +72,9 @@ return date
 }
 
 //This is just for testing, since I will usually only have one string.
-const results = (x) => x.map(a=> {
-return {original: a, updated: parseDate(a) }
-})
-
-
-console.log(results(dates))
+// const results = (x) => x.map(a=> {
+// return {original: a, updated: parseDate(a) }
+// })
 
 //1. Check for and remove circa
 //2. Remove extra characters

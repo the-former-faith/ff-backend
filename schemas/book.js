@@ -13,6 +13,31 @@ export default {
       title: 'Date Published',
       type: 'dateObject',
     },
+    {
+      name: 'links',
+      title: 'Links',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {
+            name: 'title',
+            type: 'string',
+            title: 'Site Title',
+            options: {
+              list: [
+                {title: 'Archive.org', value: 'archive.org'},
+              ]
+            }
+          },
+          {
+            name: 'url',
+            type: 'url',
+            title: 'URL',
+          },
+        ]
+      }]
+    },
   ],
   fieldsets: [
     {
