@@ -32,7 +32,7 @@ export default [
 	{
 		name: 'mainImage',
 		title: 'Main image',
-		type: 'reference', to: {type: 'imageDoc'},
+		type: 'reference', to: [{type: 'imageDoc'},{type: 'newspaperArticle'}],
 	},
 	{
 		name: 'longDescription',

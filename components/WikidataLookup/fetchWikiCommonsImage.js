@@ -1,6 +1,7 @@
 import client from 'part:@sanity/base/client'
 import md5 from 'md5'
 import parseDate from './parseDate'
+import slugify from '../../utils/slugify'
 
 const fetchImageMetaData = async (name) => {
 
@@ -36,27 +37,12 @@ const postImageDocToSanity = async(options) => {
   const testMeta = { //imageMetaData.query.pages[id (first item?)].imageinfo[0].extmetadata
     "DateTime": {
       "value":"2006-01-15 09:34:37",
-      "source":"mediawiki-metadata",
-      "hidden":""
     },
     "DateTimeOriginal": {
       "value": "created/published:  c1900.",
-      "source":"commons-desc-page"
     },
     "ObjectName": {
       "value":"Dwight Lyman Moody c.1900",
-      "source":"mediawiki-metadata",
-      "hidden":""
-    },
-    "Categories":{
-      "value":"Dwight Lyman Moody|Images from the Library of Congress|PD US",
-      "source":"commons-categories",
-      "hidden":""
-    },
-    "Assessments":{
-      "value": "",
-      "source": "commons-categories",
-      "hidden": ""
     },
     "ImageDescription":{
       "value":"Dwight Lyman Moody, founder of the Northfield Seminary, Mount Hermon School, and the Moody Bible Institute, circa 1900. Edited image from the Library of Congress",
@@ -71,33 +57,8 @@ const postImageDocToSanity = async(options) => {
       "value":"Copyright by Barron Fredricks, NYC.<br>D11791  U.S. Copyright Office.",
       "source":"commons-desc-page"
     },
-    "Permission":{
-      "value":"This image might not be in the public domain outside of the United States; this especially applies in the countries and areas that do not apply the <a href=\"https://en.wikipedia.org/wiki/rule_of_the_shorter_term\" class=\"extiw\" title=\"w:rule of the shorter term\">rule of the shorter term</a> for US works, such as Canada, Mainland China (not Hong Kong or Macao), Germany, Mexico, and Switzerland. The creator and year of publication are essential information and must be provided. See <a href=\"https://en.wikipedia.org/wiki/Wikipedia:Public_domain\" class=\"extiw\" title=\"w:Wikipedia:Public domain\">Wikipedia:Public domain</a> and <a href=\"https://en.wikipedia.org/wiki/Wikipedia:Copyrights\" class=\"extiw\" title=\"w:Wikipedia:Copyrights\">Wikipedia:Copyrights</a> for more details.",
-      "source":"commons-desc-page",
-      "hidden":""
-    },
-    "LicenseShortName":{
-      "value":"Public domain",
-      "source":"commons-desc-page",
-      "hidden":""
-    },
-    "UsageTerms":{
-      "value":"Public domain",
-      "source":"commons-desc-page",
-      "hidden":""
-    },
-    "AttributionRequired":{
-      "value":"false",
-      "source":"commons-desc-page",
-      "hidden":""
-    },
     "Copyrighted":{
       "value":"False",
-      "source":"commons-desc-page",
-      "hidden":""
-    },
-    "Restrictions":{
-      "value":"",
       "source":"commons-desc-page",
       "hidden":""
     },
@@ -109,39 +70,45 @@ const postImageDocToSanity = async(options) => {
   }
 
   //This is what I will use for posting to Sanity
-  const doc = {
-    _type: imageDoc,
-    'title': '', //'localeString'
-    'slug': '', //'localeSlug',
-    'file': {
-      'alt': ''
-    }, //'image',
-    'authors': [], //'array', of: [{type: 'reference', to: [{type: 'person'}, {type: 'organization'}]}]
-    'date': '', //'dateObject',
-    'dateEnd': '', //'dateObject','Latest Possible Date Created',
-    'source': '', //'url',
-    'license': '', //'string',
-        // options: {
-        //   list: [
-        //     {title: 'Unknown', value: 'NA'},
-        //     {title: 'Copyright', value: 'C'},
-        //     {title: 'Public Domain', value: 'PD'},
-        //     {title: 'Creative Commons Attribution (CC BY)', value: 'CC_BY'},
-        //     {title: 'Creative Commons Attribution ShareAlike (CC BY-SA)', value: 'CC_BY-SA'},
-        //     {title: 'Creative Commons Attribution-NoDerivs (CC BY-ND)', value: 'CC_BY-ND'},
-        //     {title: 'Creative Commons Attribution-NonCommercial (CC BY-NC)', value: 'CC_BY-NC'},
-        //     {title: 'Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', value: 'CC_BY-NC-SA'},
-        //     {title: 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', value: 'CC_BY-NC-ND'},
-        //   ]
-        // }
-    'notes': '', //'simpleBlockContent',
+  const doc = async(meta) => {
+
+    const date = (x) => { 
+      if (x.DateTimeOriginal) {
+        return parseDate(x.DateTimeOriginal.value)
+      } else {
+        return {
+          date: {
+            time: x.DateTime.value,
+            precision: 7,
+            isCirca: false
+          }
+        }
+      }
+    }
+
+    console.log(await date(meta))
+
+    return {
+      _type: 'imageDoc',
+      'title.en': meta.ObjectName.value, //'localeString'
+      'slug.en.current': slugify(meta.ObjectName.value), //'localeSlug',
+      'file': '',//'image',
+      'file.alt.en': meta.ImageDescription.value,
+      'authors': [], //'array', of: [{type: 'reference', to: [{type: 'person'}, {type: 'organization'}]}]
+      'source': '', //'url',
+      'license': meta.License.value, //'string',
+      'notes': '', //'simpleBlockContent',
+      ...date(meta)
+    }
   }
 
-  const postedDoc = await client.create(doc)
+  // const postedDoc = await client.create(doc)
 
-  const docRef = postedDoc._id
+  // const docRef = postedDoc._id
 
-  return docRef
+  // return docRef
+
+  console.log(doc(testMeta))
 }
 
 const fetchWikiCommonsImage = async(fileName) => {

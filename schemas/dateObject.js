@@ -26,9 +26,14 @@ export default {
       validation: Rule => Rule.min(6).max(13)
     },
     {
+      name: 'isCirca',
+      title: 'Is Circa',
+      type: 'boolean',
+    },
+    {
       name: 'calendar',
       title: 'Calendar',
-      type: 'localeString',
+      type: 'string',
     }
-  ]
+  ],
 }

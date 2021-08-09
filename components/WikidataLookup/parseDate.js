@@ -2,12 +2,13 @@ import * as chrono from 'chrono-node'
 
 const removeSpecialCharacters = (s) => s.replaceAll(/\[|\]/g, '')
 const re = new RegExp(/circa|ca\.|c(?=[0-9]{4})|c\.(?=[0-9]{4})|c\./, 'g')
-const checkIfCirca = (date) => {
-    const value = date.dateStart.value
+
+const checkIfCirca = (o) => {
+    const value = o.date.time
     const newValue = value.replaceAll(re, '')
-    date.dateStart.isCirca = value !== newValue
-    date.dateStart.value = removeSpecialCharacters(newValue)
-    return date
+    o.date.isCirca = value !== newValue
+    o.date.time = removeSpecialCharacters(newValue)
+    return o
 }
 
 const handleDecadeRangeSplit = (s) => {
@@ -24,18 +25,18 @@ const handleRegularSplit = (s) => {
 }
 
 
-const checkForSplit = (date) => {
-    const value = date.dateStart.value
+const checkForSplit = (o) => {
+    const value = o.date.time
     const decadeRange = handleDecadeRangeSplit(value)
     const splitValue = decadeRange ? decadeRange : handleRegularSplit(value)
 
     if (splitValue) {
-        date.dateStart.value = splitValue[0]
-        date.dateStart.isCirca = true
-        date.dateEnd = { value: splitValue[1], isCirca: true,  precision: 0 }
+        o.date.time = splitValue[0]
+        o.date.isCirca = true
+        o.dateEnd = { time: splitValue[1], isCirca: true,  precision: 0 }
     }
 
-    return date
+    return o
 }
 
 const getChronoPrecision = (x) => {
@@ -49,19 +50,19 @@ const getChronoPrecision = (x) => {
 }
 
 const runChrono = async(o) => {
-    const results = chrono.parse(o.value)
+    const results = chrono.parse(o.time)
 
     if (results.length > 0) {
         const result = results[0].start
         o.precision = getChronoPrecision(result)
-        o.value = result.date().toISOString()
+        o.time = result.date().toISOString()
     } else {
         //Here check for just year
-        const year = o.value.match(/([0-9]{4})/)
+        const year = o.time.match(/([0-9]{4})/)
 
         if (year) {
             o.precision = 9
-            o.value = new Date(year[0]).toISOString()
+            o.time = new Date(year[0]).toISOString()
         }
     }
 
@@ -77,7 +78,7 @@ const objectMap = (object, mapFn) => {
 
 const parseDate = async(dateString) => {
 
-    const date = { dateStart: { value: dateString, isCirca: false, precision: 0 } }
+    const date = { date: { time: dateString, isCirca: false, precision: 0 } }
     
     const cleanedDate = checkIfCirca(date)
 

@@ -112,6 +112,8 @@ export default {
         }, 
         {
           type: 'object',
+          title: 'Custom name',
+          description: 'Use this sparingly, since it is better to use a reference',
           fields: [
             {name: 'title', type: 'localeString'}
           ]
