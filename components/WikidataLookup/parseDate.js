@@ -24,7 +24,6 @@ const handleRegularSplit = (s) => {
     return splitter ? s.split(splitter[0]) : null
 }
 
-
 const checkForSplit = (o) => {
     const value = o.date.time
     const decadeRange = handleDecadeRangeSplit(value)
@@ -49,7 +48,7 @@ const getChronoPrecision = (x) => {
     }
 }
 
-const runChrono = async(o) => {
+const runChrono = (o) => {
     const results = chrono.parse(o.time)
 
     if (results.length > 0) {
@@ -84,13 +83,11 @@ const parseDate = async(dateString) => {
 
     const splitDate = checkForSplit(cleanedDate)
 
-    //For now I'm just running on start date, but will have to change to check both
-    const runChronoOnBothDates = objectMap(splitDate, async(x) => {
-        return await runChrono(x)
+    const runChronoOnBothDates = objectMap(splitDate, (x) => {
+        return runChrono(x)
     })
     
     return runChronoOnBothDates
-    //return { date: {time: date, isCirca: boolean, precision: number},  dateEnd: {time: date, isCirca: boolean, precision: number} }
 }  
 
 export default parseDate

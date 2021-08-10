@@ -65,6 +65,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     return {
       'title.en': entity.payload.name,
       'slug.en.current': slugify(entity.payload.name),
+      'mainImage._ref': entity.payload.imageId ? await fetchWikiCommonsImage(entity.payload.imageId) : undefined,
       'shortDescription.en': entity.payload.description,
       'familyName.en': (await getLabels(claims.P734)).join(' '),
       'givenNames.en': await getLabels(claims.P735),
@@ -109,6 +110,7 @@ const WikidataLookup = React.forwardRef((props, ref) => {
           name: i.label,
           names: i.aliases ? [i.label, ...i.aliases] : [i.label],
           imageUrl: y[i.id].claims.P18 ? `https://commons.wikimedia.org/w/thumb.php?width=100&f=${y[i.id].claims.P18[0].split(' ').join('_')}` : null,
+          imageId: y[i.id].claims.P18 ? y[i.id].claims.P18[0] : null,
           wikipediaId: y[i.id].sitelinks.enwiki ? y[i.id].sitelinks.enwiki : undefined,
           instanceOf: y[i.id].claims.P31 ? y[i.id].claims.P31[0] : null,
           claims: y[i.id].claims
@@ -129,10 +131,6 @@ const WikidataLookup = React.forwardRef((props, ref) => {
     return mappedEntities
 
   }
-
-  const testImage = "Dwight Lyman Moody c.1900.jpg"
-
-  fetchWikiCommonsImage(testImage)
 
   return (
     <AutoFill 
