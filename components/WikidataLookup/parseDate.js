@@ -26,6 +26,7 @@ const handleRegularSplit = (s) => {
 
 const checkForSplit = (o) => {
     const value = o.date.time
+
     const decadeRange = handleDecadeRangeSplit(value)
     const splitValue = decadeRange ? decadeRange : handleRegularSplit(value)
 
@@ -77,7 +78,10 @@ const objectMap = (object, mapFn) => {
 
 const parseDate = async(dateString) => {
 
-    const date = { date: { time: dateString, isCirca: false, precision: 0 } }
+    const date = { date: { time: dateString, isCirca: false, precision: 11 } }
+
+    //Check that it is not an actual date format
+    if ( dateString.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})/) ) return date
     
     const cleanedDate = checkIfCirca(date)
 
@@ -92,4 +96,4 @@ const parseDate = async(dateString) => {
 
 export default parseDate
 
-//    TODO: check for 1800s / late 1850s / early 1700 s
+// TODO: check for 1800s / late 1850s / early 1700 s

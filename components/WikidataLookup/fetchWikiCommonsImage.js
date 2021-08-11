@@ -67,11 +67,11 @@ const createMutation = async(options) => {
       asset: {
         _ref: imageRef,
       },
-      alt: {'en': meta.ImageDescription.value},
+      alt: {'en': meta.ImageDescription ? meta.ImageDescription.value : meta.ObjectName.value},
     },
-    'authors': [{"_key": "a84c87d2ee6d", "title": {"en": meta.Artist.value}}],
+    'authors': meta.Artist ? [{"_key": "a84c87d2ee6d", "title": {"en": meta.Artist.value.replace(/<[^>]*>?/gm, '') }}] : undefined,
     'source': `https://commons.wikimedia.org/wiki/File:${meta.ObjectName.value.split(' ').join('_')}`,
-    'license': meta.License.value,
+    'license': meta.License ? meta.License.value : undefined,
     ...await date(meta)
   }
 }
