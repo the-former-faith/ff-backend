@@ -39,7 +39,8 @@ export default [
         to: [
           { type: 'post' },
           { type: 'organization' },
-          { type: 'newspaperArticle' }
+          { type: 'newspaperArticle' },
+          { type: 'book' }
           // other types you may want to link to
         ]
       }

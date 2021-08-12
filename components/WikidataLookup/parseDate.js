@@ -78,7 +78,7 @@ const objectMap = (object, mapFn) => {
 
 const parseDate = async(dateString) => {
 
-    const date = { date: { time: dateString, isCirca: false, precision: 11 } }
+    const date = { date: { time: dateString, isCirca: false, precision: 9 } }
 
     //Check that it is not an actual date format
     if ( dateString.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})/) ) return date

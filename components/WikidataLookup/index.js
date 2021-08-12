@@ -70,9 +70,11 @@ const WikidataLookup = React.forwardRef((props, ref) => {
       'familyName.en': (await getLabels(claims.P734)).join(' '),
       'givenNames.en': await getLabels(claims.P735),
       'date.time': claims.P569 ? claims.P569[0] : undefined,
-      'date.precision': claims.P569 ? 9 : undefined,
+      'date.precision': claims.P569 ? 11 : undefined,
+      'date.isCirca': claims.P569 ? false : undefined,
       'dateEnd.time': claims.P570 ? claims.P570[0] : undefined,
       'dateEnd.precision': claims.P570 ? 9 : undefined,
+      'dateEnd.isCirca': claims.P570 ? false : undefined,
       'wikipediaId': entity.payload.wikipediaId
     }
 
