@@ -40,7 +40,8 @@ export default [
           { type: 'post' },
           { type: 'organization' },
           { type: 'newspaperArticle' },
-          { type: 'book' }
+          { type: 'book' },
+          { type: 'organization' }
           // other types you may want to link to
         ]
       }

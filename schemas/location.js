@@ -21,7 +21,9 @@ export default {
           {title: 'Country', value: 'country'},
           {title: 'State', value: 'state'},
           {title: 'County/Region', value: 'region'},
-          {title: 'City', value: 'city'}
+          {title: 'City', value: 'city'},
+          {title: 'District', value: 'district'},
+          {title: 'School', value: 'school'},
         ]
       }
     },

@@ -27,6 +27,7 @@ export default {
             options: {
               list: [
                 {title: 'Archive.org', value: 'archive.org'},
+                {title: 'Publisher Official', value: 'publisher'},
               ]
             }
           },

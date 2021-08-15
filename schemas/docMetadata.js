@@ -52,4 +52,14 @@ export default [
 		title: 'Content',
 		type: 'localeAdvancedBlockContent'
 	},
+	{
+		name: 'tags',
+		title: 'Tags',
+		type: 'tags'
+	},
+	{
+		name: 'featured',
+		type: 'boolean',
+		title: 'Featured'
+	},
 ]
